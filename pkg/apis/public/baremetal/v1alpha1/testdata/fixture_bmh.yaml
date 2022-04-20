@@ -1,0 +1,37 @@
+status:
+  hardware:
+    storage:
+      - by_path: ""
+        name: /dev/sda
+        rotational: true
+        serialNumber: ""
+        sizeBytes: 1073741824000
+      - by_path: ""
+        name: /dev/sdb
+        rotational: true
+        serialNumber: ""
+        sizeBytes: 1073741824000
+      - by_path: ""
+        name: /dev/sdc
+        rotational: true
+        serialNumber: ""
+        sizeBytes: 1073741824000
+      - by_path: ""
+        name: /dev/sdd
+        rotational: false
+        serialNumber: ""
+        sizeBytes: 1073741824000
+      - by_path: ""
+        name: /dev/sde
+        rotational: false
+        serialNumber: ""
+        sizeBytes: 1073741824000
+      - by_path: ""
+        name: /dev/sdf
+        rotational: false
+        serialNumber: ""
+        sizeBytes: 1073741824000
+      - by_path: ""
+        name: /dev/nvme0n1
+        rotational: false
+        sizeBytes: 1073741824000

@@ -1,0 +1,137 @@
+post_deploy_script: |
+  #!/bin/bash -ex
+  echo $(date) 'post_deploy_script done' >> /root/post_deploy_done
+pre_deploy_script: |
+  #!/bin/bash -ex
+  echo $(date) 'post_deploy_script done' >> /root/pre_deploy_done
+target_storage:
+  - align: optimal
+    by_name: /dev/sda
+    partition_schema:
+      - filesystem:
+          type: vfat
+        name: uefi
+        num: 1
+        part_end: 205MiB
+        part_start: 1MiB
+        partflags:
+          - esp
+      - filesystem:
+          type: ext4
+        mount:
+          point: /
+        name: root
+        num: 2
+        part_end: 51405MiB
+        part_start: 205MiB
+      - name: rest_sda
+        num: 3
+        part_end: 1023999MiB
+        part_start: 51405MiB
+    state: present
+    table: gpt
+    type: physical
+    units: MiB
+    wipe: true
+  - align: optimal
+    by_name: /dev/sde
+    state: present
+    table: gpt
+    type: physical
+    units: MiB
+    wipe: false
+  - align: optimal
+    by_name: /dev/sdf
+    state: present
+    table: gpt
+    type: physical
+    units: MiB
+    wipe: true
+  - align: optimal
+    by_name: /dev/sdb
+    state: present
+    table: gpt
+    type: physical
+    units: MiB
+    wipe: true
+  - align: optimal
+    by_name: /dev/nvme0n1
+    partition_schema:
+      - name: nvme1
+        num: 1
+        part_end: 10241MiB
+        part_start: 1MiB
+      - filesystem:
+          type: ext4
+        mount:
+          point: /mnt/nvme2
+        name: nvme2
+        num: 2
+        part_end: 1023999MiB
+        part_start: 10241MiB
+    state: present
+    table: gpt
+    type: physical
+    units: MiB
+    wipe: false
+  - align: optimal
+    lvm_groups:
+      - create: true
+        disks:
+          - /dev/sdd
+        lvnames:
+          - create: true
+            filesystem:
+              type: ext4
+            lvname: docker
+            mount:
+              point: /var/run/docker
+            size: "204800"
+        vgname: ssd
+      - create: true
+        disks:
+          - /dev/sdc
+          - /dev/sda3
+        lvnames:
+          - create: true
+            filesystem:
+              type: ext4
+            lvname: logs
+            mount:
+              point: /var/log
+            size: "102400"
+        vgname: hdd
+      - create: true
+        disks:
+          - /dev/nvme0n1p1
+        lvnames:
+          - create: true
+            filesystem:
+              type: ext4
+            lvname: nvme_lv
+            mount:
+              point: ""
+            size: 100%FREE
+        vgname: nvme_vg
+    type: lvm
+    units: MiB
+    wipe: true
+target_system:
+  grub:
+    default_grub_opts:
+      - GRUB_DISABLE_RECOVERY="true"
+      - GRUB_PRELOAD_MODULES=lvm
+      - GRUB_TIMEOUT=20
+    to_device_failover: /dev/vdb
+    to_devices:
+      - /dev/sda
+  rootfs:
+    /:
+      url: http://httpd-http/images/tgz-bionic
+  kernel_parameters:
+    sysctl:
+      kernel.domainname: example.com
+    modules:
+      - filename: /etc/modprobe.d/mlx4.conf
+        content: |
+          softdep mlx4_core post: mlx4_en

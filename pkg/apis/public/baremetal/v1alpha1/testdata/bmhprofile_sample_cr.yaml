@@ -1,0 +1,54 @@
+apiVersion: metal3.io/v1alpha1
+metadata:
+  name: default
+kind: StorageProfile
+spec:
+  devices:
+    - device:
+        type: hdd
+        minSizeGiB: 20
+        wipe: true
+      partitions:
+        - name: efi
+          sizeGiB: 0.1
+          partflags:
+            - esp
+        - name: config-2
+          sizeGiB: 0.02
+        - name: root
+          sizeGiB: 0
+  volumeGroups:
+    - name: elastic
+      devices:
+        - type: hdd
+  logicalVolumes:
+    - name: elastic
+      vg: elastic
+      sizeGiB: 0
+  fileSystems:
+    - fileSystem: vfat
+      partition: efi
+      mountPoint: /boot/efi
+    - fileSystem: vfat
+      partition: config-2
+    - fileSystem: ext4
+      partition: root
+      mountPoint: /
+    - fileSystem: ext4
+      logicalVolume: elastic
+      mountPoint: /mnt/elastic
+  rootFSURL: http://httpd-http/images/tgz-bionic
+  preDeployScript: |
+    #!/bin/bash -ex
+    echo $(date) 'post_deploy_script done' >> /root/pre_deploy_done
+  postDeployScript: |
+    #!/bin/bash -ex
+    echo $(date) 'post_deploy_script done' >> /root/post_deploy_done
+  grubConfig:
+    toDevices:
+      - /dev/vda
+    toDeviceFailOver: /dev/vdb
+    defaultGrubOptions:
+      - GRUB_DISABLE_RECOVERY="true"
+      - GRUB_PRELOAD_MODULES=lvm
+      - GRUB_TIMEOUT=20

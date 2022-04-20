@@ -1,0 +1,116 @@
+devices:
+  - device:
+      byName: /dev/sda
+      minSizeGiB: 500
+      type: hdd
+      wipe: true
+    partitions:
+      - name: uefi
+        sizeGiB: 0.2
+        partflags:
+          - esp
+      - name: root
+        sizeGiB: 50
+      - name: rest_sda
+        sizeGiB: 0
+  - device:
+      byName: /dev/sde #reserved for ceph
+  - device:
+      byName: /dev/sdf #reserved for ceph
+      wipe: true
+  - device:
+      wipe: true
+  - device:
+      byName: /dev/nvme0n1
+    partitions:
+      - name: nvme1
+        sizeGiB: 10
+      - name: nvme2
+volumeGroups:
+  - name: ssd
+    minSizeGiB: 500
+    devices:
+      - type: ssd
+        minSizeGiB: 200
+  - name: hdd
+    minSizeGiB: 500
+    devices:
+      - type: hdd
+      - partition: rest_sda
+  - name: nvme_vg
+    devices:
+      - partition: nvme1
+#  - name: elastic
+#    minSizeGiB: 1000
+#    type: ssd
+#  - name: maria
+#    minSizeGiB: 2000
+#    type: hdd
+
+logicalVolumes:
+  - name: logs
+    vg: hdd
+    sizeGiB: 100
+  - name: docker
+    vg: ssd
+    sizeGiB: 200
+  - name: nvme_lv
+    vg: nvme_vg
+#  - name: elastic
+#    vg: elastic
+#    sizeGiB: 1000
+#  - name: maria
+#    vg: maria
+#    sizeGiB: 1000
+
+fileSystems:
+  - fileSystem: vfat
+    partition: uefi
+  - fileSystem: ext4
+    partition: root
+    mountPoint: /
+  - fileSystem: ext4
+    logicalVolume: logs
+    mountPoint: /var/log
+  - fileSystem: ext4
+    logicalVolume: docker
+    mountPoint: /var/run/docker
+  - fileSystem: ext4
+    logicalVolume: nvme_lv
+  - fileSystem: ext4
+    partition: nvme2
+    mountPoint: /mnt/nvme2
+#  - fileSystem: ext4
+#    logicalVolume: elastic
+#    mountPoint: /components/elastic
+#  - fileSystem: ext4
+#    logicalVolume: maria
+#    mountPoint: /components/maria
+
+kaasComponents:
+  - name: elastic
+    type: ssd
+    sizeGiB: 100
+  - name: maria
+    type: hdd
+    sizeGiB: 200
+preDeployScript: |
+  #!/bin/bash -ex
+  echo $(date) 'post_deploy_script done' >> /root/pre_deploy_done
+postDeployScript: |
+  #!/bin/bash -ex
+  echo $(date) 'post_deploy_script done' >> /root/post_deploy_done
+rootFSURL: http://httpd-http/images/tgz-bionic
+grubConfig:
+  toDeviceFailover: /dev/vdb
+  defaultGrubOptions:
+    - GRUB_DISABLE_RECOVERY="true"
+    - GRUB_PRELOAD_MODULES=lvm
+    - GRUB_TIMEOUT=20
+kernelParameters:
+  sysctl:
+    kernel.domainname: example.com
+  modules:
+    - filename: /etc/modprobe.d/mlx4.conf
+      content: |
+        softdep mlx4_core post: mlx4_en
