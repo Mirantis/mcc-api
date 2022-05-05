@@ -125,7 +125,9 @@ type MiraCephFsStatus struct {
 
 // CephDetails contains additional Ceph cluster information, such as disk usage, device mapping for osds
 type CephDetails struct {
-	// DiskUsageDetails contains verbose info about usage/capacity cluster per class/pools
+	// UsageDetails contains verbose info about usage/capacity cluster per class/pools
+	UsageDetails UsageDetails `json:"usageDetails,omitempty"`
+	// deprecated, DiskUsageDetails contains verbose info about usage/capacity cluster per class/pools
 	DiskUsageDetails DiskUsageDetails `json:"diskUsage,omitempty"`
 	// DeviceMapping contains information on which node runs each osds and what disk it's using
 	DeviceMapping map[string]DeviceMapping `json:"deviceMapping,omitempty"`
@@ -133,17 +135,38 @@ type CephDetails struct {
 	CephDeviceMapping map[string]OsdDeviceMapping `json:"cephDeviceMapping,omitempty"`
 }
 
+// DiskUsageDetails deprecated
 type DiskUsageDetails struct {
 	ClassesDetail map[string]ClassDiskUsageStats `json:"deviceClass,omitempty"`
 	PoolsDetail   map[string]PoolDiskUsageStats  `json:"pools,omitempty"`
 }
 
+type UsageDetails struct {
+	ClassesDetail map[string]ClassUsageStats `json:"deviceClasses,omitempty"`
+	PoolsDetail   map[string]PoolUsageStats  `json:"pools,omitempty"`
+}
+
+type ClassUsageStats struct {
+	UsedBytes      string `json:"usedBytes,omitempty"`
+	AvailableBytes string `json:"availableBytes,omitempty"`
+	TotalBytes     string `json:"totalBytes,omitempty"`
+}
+
+// ClassDiskUsageStats deprecated
 type ClassDiskUsageStats struct {
 	UsedBytes      uint64 `json:"bytesUsed,omitempty"`
 	AvailableBytes uint64 `json:"bytesAvailable,omitempty"`
 	TotalBytes     uint64 `json:"bytesTotal,omitempty"`
 }
 
+type PoolUsageStats struct {
+	UsedBytes           string `json:"usedBytes,omitempty"`
+	UsedBytesPercentage string `json:"usedBytesPercentage,omitempty"`
+	AvailableBytes      string `json:"availableBytes,omitempty"`
+	TotalBytes          string `json:"totalBytes,omitempty"`
+}
+
+// PoolDiskUsageStats deprecated
 type PoolDiskUsageStats struct {
 	UsedBytes           uint64 `json:"bytesUsed,omitempty"`
 	UsedBytesPercentage string `json:"usedPercentage,omitempty"`

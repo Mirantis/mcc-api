@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Mirantis Inc.
+Copyright 2022 The Mirantis Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,6 +40,15 @@ const (
 	LCMClusterStateValueTrue = "true"
 	// LCMClusterStateValueFalse denotes a false value for LCMClusterState
 	LCMClusterStateValueFalse = "false"
+	// LCMClusterStateReasonAnnotation denotes the reason the LCMClusterState
+	// was created
+	LCMClusterStateReasonAnnotation = "lcm.mirantis.com/cluster-state-reason"
+	// LCMCLusterStateReasonMaintenance denotes maintenance cause of
+	// LCMClusterState creation
+	LCMCLusterStateReasonMaintenance = "maintenance"
+	// LCMClusterStateReasonUpgrade denotes upgrade cause of LCMClusterState
+	// creation
+	LCMClusterStateReasonUpgrade = "upgrade"
 	// NameLength denotes the maximum length of LCMClusterState object name
 	NameLength = int(63)
 )

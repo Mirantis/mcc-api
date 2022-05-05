@@ -60,6 +60,11 @@ type NodeCleanUpSpec struct {
 	// Node will be cleaned up with all its osd/devices if possible
 	// Optional
 	CompleteCleanUp bool `json:"completeCleanUp,omitempty"`
+	// Same as CompleteCleanUp, but without devices cleanup on host
+	// May be useful when host is going to be reprovisioned and
+	// no need to spent time for devices clean up
+	// Optional
+	DropFromClusterOnly bool `json:"dropFromClusterOnly,omitempty"`
 	// CleanUpByDevice describes devices or it pathes to cleanup
 	// Optional
 	// +kubebuilder:validation:MinItems:=1
@@ -137,6 +142,9 @@ type RequestRemoveInfo struct {
 type HostMapping struct {
 	// CompleteCleanUp is a flag whether make complete host cleanup from crush map
 	CompleteCleanUp bool `json:"completeCleanUp,omitempty"`
+	// DropFromClusterOnly is a flag whether make complete host cleanup from
+	// crush map, but do not cleanup used devices
+	DropFromClusterOnly bool `json:"dropFromClusterOnly,omitempty"`
 	// OsdMapping represents a mapping from osdID -> devices, also contains
 	// osd remove statuses such as osd remove itself, deployment remove,
 	// device clean up job

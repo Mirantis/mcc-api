@@ -27,9 +27,9 @@ func GetConditionsSummary(conditions []Condition) ConditionsSummary {
 }
 
 func GetConditionFromSummary(cs ConditionsSummary, ctype ConditionType) *Condition {
-	for _, condition := range cs.Conditions {
-		if condition.Type == ctype {
-			return &condition
+	for i := range cs.Conditions {
+		if cs.Conditions[i].Type == ctype {
+			return &cs.Conditions[i]
 		}
 	}
 	return nil

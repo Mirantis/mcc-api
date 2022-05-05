@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Mirantis Inc.
+Copyright 2022 The Mirantis Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,10 +22,9 @@ import (
 	"fmt"
 	"time"
 
+	errs "github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-
-	errs "github.com/Mirantis/mcc-api/pkg/errors"
 )
 
 const (
@@ -167,6 +166,9 @@ type LCMClusterSpec struct {
 	// LCMType contains the LCM distribution type
 	// +kubebuilder:validation:Enum=ucp;byo;k0s
 	LCMType LCMType `json:"lcmType,omitempty"`
+
+	// Version of LCM agent machines of this cluster should have
+	AgentVersion string `json:"agentVesrion,omitempty"`
 }
 
 // GetTokenTTL returns TokenTTL value for the cluster

@@ -1,11 +1,10 @@
 package util
 
 import (
-	"github.com/pkg/errors"
-
 	clusterv1 "github.com/Mirantis/mcc-api/pkg/apis/public/cluster/v1alpha1"
 	"github.com/Mirantis/mcc-api/pkg/apis/public/vsphere/v1alpha1"
 	util "github.com/Mirantis/mcc-api/pkg/apis/util/common/v1alpha1"
+	"github.com/Mirantis/mcc-api/pkg/errors"
 )
 
 var _ = util.ClusterSpecGetter(&v1alpha1.VsphereClusterProviderSpec{})

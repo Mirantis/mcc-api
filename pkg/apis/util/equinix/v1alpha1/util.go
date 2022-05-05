@@ -1,11 +1,10 @@
 package util
 
 import (
-	"github.com/pkg/errors"
-
 	clusterv1 "github.com/Mirantis/mcc-api/pkg/apis/public/cluster/v1alpha1"
 	"github.com/Mirantis/mcc-api/pkg/apis/public/equinix/v1alpha1"
 	util "github.com/Mirantis/mcc-api/pkg/apis/util/common/v1alpha1"
+	"github.com/Mirantis/mcc-api/pkg/errors"
 )
 
 var _ = util.ClusterSpecGetter(&v1alpha1.EquinixMetalClusterProviderSpec{})
@@ -37,8 +36,8 @@ func GetClusterStatus(cluster *clusterv1.Cluster) (*v1alpha1.EquinixMetalCluster
 	return status, err
 }
 
-func GetMachineSpec(machine *clusterv1.Machine) (*v1alpha1.EquinixMetalMachineProviderSpec, error) {
-	obj, err := util.GetMachineSpecObj(machine)
+func DecodeMachineSpec(machineSpec *clusterv1.MachineSpec) (*v1alpha1.EquinixMetalMachineProviderSpec, error) {
+	obj, err := util.DecodeMachineSpecObj(machineSpec)
 	if err != nil {
 		return nil, err
 	}
@@ -47,6 +46,10 @@ func GetMachineSpec(machine *clusterv1.Machine) (*v1alpha1.EquinixMetalMachinePr
 		return nil, errors.Errorf("unexpected spec type: %v", obj)
 	}
 	return spec, err
+}
+
+func GetMachineSpec(machine *clusterv1.Machine) (*v1alpha1.EquinixMetalMachineProviderSpec, error) {
+	return DecodeMachineSpec(&machine.Spec)
 }
 
 func GetMachineStatus(machine *clusterv1.Machine) (*v1alpha1.EquinixMetalMachineProviderStatus, error) {

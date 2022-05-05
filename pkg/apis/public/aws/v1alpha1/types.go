@@ -521,6 +521,10 @@ type Instance struct {
 	// Specifies size (in Gi) of the root storage device
 	RootDeviceSize int64 `json:"rootDeviceSize,omitempty"`
 
+	// RootDeviceType specifies volume type of the root storage device
+	// +kubebuilder:validation:Enum=standard;io1;io2;gp2;sc1;st1;gp3
+	RootDeviceType string `json:"rootDeviceType,omitempty"`
+
 	// The tags associated with the instance.
 	Tags map[string]string `json:"tags,omitempty"`
 

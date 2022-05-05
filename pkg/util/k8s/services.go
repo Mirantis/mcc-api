@@ -8,10 +8,10 @@ import (
 	crclient "sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func ServiceExternalAddress(client crclient.Client, namespace, name string) (string, error) {
+func ServiceExternalAddress(ctx context.Context, client crclient.Client, namespace, name string) (string, error) {
 	var address string
 	var svc corev1.Service
-	err := client.Get(context.TODO(), crclient.ObjectKey{
+	err := client.Get(ctx, crclient.ObjectKey{
 		Namespace: namespace,
 		Name:      name,
 	}, &svc)

@@ -50,6 +50,8 @@ type MCCCertificateRequestExpansion interface{}
 
 type MCCUpgradeExpansion interface{}
 
+type MachinePoolExpansion interface{}
+
 type OpenStackCredentialExpansion interface{}
 
 type OpenStackResourcesExpansion interface{}
