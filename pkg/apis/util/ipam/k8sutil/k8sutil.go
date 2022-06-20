@@ -126,10 +126,15 @@ func MakeNeedToUpdate(o k8types.K8sObject, oldVal, newVal interface{}) {
 
 // SetNeedToUpdate returns `true` if value really was changed,
 // or `true` if optional parameter shouldBeChanged == true
-func SetNeedToUpdate(o k8types.K8sObject, shouldBeChanged ...bool) bool {
-	tmp, changed := setSomething(o.GetAnnotations(), config.NeedUpdateKey, "true", shouldBeChanged)
-	if changed {
+func SetNeedToUpdate(o k8types.K8sObject, shouldBeChanged ...bool) (changed bool) {
+	tmp := o.GetAnnotations()
+	if tmp == nil {
+		tmp = map[string]string{}
+	}
+	if _, ok := tmp[config.ReqToReconcileAnnotation]; !ok {
+		tmp[config.ReqToReconcileAnnotation] = time.Now().UTC().Format(config.TimeOutputFormatRFC3339)
 		o.SetAnnotations(tmp)
+		changed = true
 	}
 	return changed
 }
@@ -137,7 +142,7 @@ func SetNeedToUpdate(o k8types.K8sObject, shouldBeChanged ...bool) bool {
 // ClearNeedToUpdate returns `true` if value really was changed
 // or `true` if optional parameter shouldBeChanged == true
 func ClearNeedToUpdate(o k8types.K8sObject, shouldBeChanged ...bool) bool {
-	tmp, changed := clearSomething(o.GetAnnotations(), config.NeedUpdateKey, shouldBeChanged)
+	tmp, changed := clearSomething(o.GetAnnotations(), config.ReqToReconcileAnnotation, shouldBeChanged)
 	if changed {
 		o.SetAnnotations(tmp)
 	}
@@ -150,7 +155,7 @@ func IsNeedToUpdate(o k8types.K8sObject) bool {
 	if tmp == nil {
 		return false
 	}
-	return tmp[config.NeedUpdateKey] != ""
+	return tmp[config.ReqToReconcileAnnotation] != ""
 }
 
 //-----------------------------------------------------------------------------
@@ -302,4 +307,18 @@ func EnsureContextDeadline(ctx context.Context, fallbackTimeout time.Duration) (
 		newCtx, cancel = context.WithTimeout(ctx, fallbackTimeout)
 	}
 	return newCtx, cancel, isFallback
+}
+
+func EnsureNamespaceInRef(ref, fallbackNamespace string) (rv string, fallback bool) {
+	if fallbackNamespace == "" {
+		return ref, false
+	}
+	refParts := strings.Split(ref, "/")
+	if len(refParts) < 2 {
+		rv = fmt.Sprintf("%s/%s", fallbackNamespace, refParts[0])
+		fallback = true
+	} else {
+		rv = fmt.Sprintf("%s/%s", refParts[0], refParts[1])
+	}
+	return rv, fallback
 }

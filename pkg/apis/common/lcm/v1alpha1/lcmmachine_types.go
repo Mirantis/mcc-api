@@ -68,6 +68,8 @@ const (
 	LCMStateItemParamIsDedicatedMaster = "isDedicatedMaster"
 	LCMStateItemParamTrueValue         = "true"
 
+	LCMStateItemParamUCPTag = "ucp_tag"
+
 	// LCMMachineIndexAnnotation names an annotation that stores the
 	// index used for the ordering of LCMMachines
 	LCMMachineIndexAnnotation = "lcm.mirantis.com/index"
@@ -204,7 +206,10 @@ type LCMMachineStatus struct {
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// RHELLicenseApplied status
 	// +optional
-	RHELLicenseApplied bool `json:"rhelLicenseApplied,omitempty"`
+	RHELLicenseApplied *bool `json:"rhelLicenseApplied,omitempty"`
+	// RHELLicenseError content
+	// +optional
+	RHELLicenseError string `json:"rhelLicenseError,omitempty"`
 	// MCC release associated with processed configuration
 	Release   string `json:"release,omitempty"`
 	Interface string `json:"interface,omitempty"`
@@ -222,9 +227,17 @@ type LCMMachineStatus struct {
 	// KubernetesCordonDrain indicates kubelet state in which the machine is
 	// with respect to LCMClusterState objects present for it
 	KubernetesCordonDrain CordondrainStatus `json:"kubernetesCordonDrain,omitempty"`
+	// KubernetesCordonDrainError contains an error message if there was one
+	// while the kubernetes machine drain process
+	// +optional
+	KubernetesCordonDrainError string `json:"kubernetesCordonDrainError,omitempty"`
 	// SwarmCordonDrain indicates swarm state in which the machine is
 	// with respect to LCMClusterState objects present for it
 	SwarmCordonDrain CordondrainStatus `json:"swarmCordonDrain,omitempty"`
+	// SwarmCordonDrainError contains an error message if there was one
+	// while the swarm machine drain process
+	// +optional
+	SwarmCordonDrainError string `json:"swarmCordonDrainError,omitempty"`
 }
 
 type HostInfo struct {
@@ -236,8 +249,106 @@ type HostInfo struct {
 	KernelVersion string `json:"kernelVersion,omitempty"`
 	// OS information
 	OS *sysinfo.OSInfo `json:"os,omitempty"`
-	// System timezone.
+	// System timezone
 	Timezone string `json:"timezone,omitempty"`
+	// Repository list
+	// +nullable
+	Repositories []*Repository `json:"repositories,omitempty"`
+	// Available new distributive updates
+	UpdatesAvailable bool `json:"updatesAvailable,omitempty"`
+	// Hardware of host
+	// +nullable
+	Hardware *HardwareDetails `json:"hardware,omitempty"`
+	// OS needs reboot
+	RebootRequired bool `json:"rebootRequired,omitempty"`
+}
+
+// HardwareDetails collects all of the information about hardware
+// discovered on the host.
+type HardwareDetails struct {
+	CPU     CPU     `json:"cpu"`
+	Memory  Memory  `json:"memory"`
+	Storage Storage `json:"storage"`
+	Network Network `json:"network"`
+}
+
+type CPU struct {
+	// Count cores
+	Count int `json:"count"`
+	// Threads of all cores
+	Threads int `json:"threads"`
+}
+
+type Memory struct {
+	// Total memory in bytes
+	Total int `json:"total"`
+}
+
+type Storage struct {
+	// List of available disks
+	Disks []*Disk `json:"disks"`
+}
+
+type Disk struct {
+	// Serial number of disk
+	SerialNumber string `json:"serialNumber"`
+	// Name of disk
+	Name string `json:"name"`
+	// Size in bytes
+	Size int `json:"size"`
+	// Type of disk (example: hdd, ssd, fdd, odd)
+	Type string `json:"type"`
+	// Vendor name (example: ATA)
+	Vendor string `json:"vendor"`
+	// Model name (example: VBOX_HARDDISK)
+	Model string `json:"model"`
+	// Databus
+	BusPath string `json:"busPath"`
+	// Path to disk by path
+	ByPath string `json:"byPath"`
+	// Path to disk by ID
+	ByID string `json:"byID"`
+	// Partitions of disk
+	// +nullable
+	Partitions []*DiskPartition `json:"partitions"`
+}
+
+type DiskPartition struct {
+	// Name of disk partition
+	Name string `json:"name"`
+	// Size in bytes
+	Size int `json:"size"`
+	// Label of disk partition
+	// +optional
+	Label string `json:"label"`
+}
+
+type Network struct {
+	//  List of available network interface controllers
+	// +nullable
+	NICs []*NIC `json:"nics"`
+}
+
+// Network interface controller
+type NIC struct {
+	// Name of network interface controller
+	Name string `json:"name"`
+	// Media access control address
+	MacAddress string `json:"macAddress"`
+	// Is virtual network interface
+	IsVirtual bool `json:"isVirtual"`
+	// PCI address
+	// +nullable
+	PCIAddress *string `json:"pciAddress"`
+}
+
+type Repository struct {
+	// Remote URI
+	URI string `json:"uri,omitempty"`
+	// Release name
+	Release string `json:"release,omitempty"`
+	// Section names or components. There can be several section names, separated by spaces
+	Section []string `json:"section,omitempty"`
 }
 
 type RebootStatus struct {
@@ -273,11 +384,34 @@ type LCMStateItem struct {
 	Phase LCMItemPhase `json:"phase,omitempty"`
 }
 
-func (item LCMStateItem) Hash() string {
+func ControlNodeIPChanged(current, expected LCMStateItem, m *LCMMachine) bool {
+	cur := current.Params[LCMStateItemParamControlNodeIP]
+	exp := expected.Params[LCMStateItemParamControlNodeIP]
+	return cur != exp
+}
+
+func UCPTagChanged(current, expected LCMStateItem, m *LCMMachine) bool {
+	cur := current.Params[LCMStateItemParamUCPTag]
+	exp := expected.Params[LCMStateItemParamUCPTag]
+	return cur != exp
+}
+
+func (item LCMStateItem) Hash(lcmVersion string) string {
 	// TODO: use something with more guarantees of stability than JSON
 	if len(item.Params) == 0 {
 		item.Params = nil
+	} else { //ignore controlNodeIP for hash calculation if agent version requires so
+		if AgentGreater187(lcmVersion) { //"" for tests
+			newParams := make(map[string]string)
+			for k, v := range item.Params {
+				if k != LCMStateItemParamControlNodeIP && k != LCMStateItemParamUCPTag {
+					newParams[k] = v
+				}
+			}
+			item.Params = newParams
+		}
 	}
+
 	out, err := json.Marshal(item)
 	if err != nil {
 		log.Panicf("json.Marshal(): %v", err)
@@ -370,7 +504,7 @@ func (m *LCMMachine) IsNodeInitialized() bool {
 	if !gotIP {
 		return false
 	}
-	if m.Spec.RHELLicenseSubscription != "" && !m.Status.RHELLicenseApplied {
+	if m.Spec.RHELLicenseSubscription != "" && !BoolValue(m.Status.RHELLicenseApplied) {
 		return false
 	}
 	return true
@@ -390,7 +524,7 @@ func (m *LCMMachine) IsReady() bool {
 
 	for _, item := range m.Spec.StateItems {
 		status, found := m.Status.StateItemStatuses[item.Name]
-		if !found || item.Hash() != status.Hash || !status.IsReady() {
+		if !found || item.Hash(m.Spec.AgentConfig.Version) != status.Hash || !status.IsReady() {
 			return false
 		}
 	}
@@ -410,7 +544,7 @@ func (m *LCMMachine) IsPhaseReady(phase LCMItemPhase) bool {
 			continue
 		}
 		status, found := m.Status.StateItemStatuses[item.Name]
-		if !found || item.Hash() != status.Hash || !status.IsReady() {
+		if !found || item.Hash(m.Spec.AgentConfig.Version) != status.Hash || !status.IsReady() {
 			return false
 		}
 	}
@@ -558,6 +692,15 @@ func ProxyStateItemParams(stateItems []LCMStateItem) map[string]string {
 		}
 	}
 	return nil
+}
+
+// BoolValue returns the value of the bool pointer passed in or
+// false if the pointer is nil.
+func BoolValue(v *bool) bool {
+	if v != nil {
+		return *v
+	}
+	return false
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

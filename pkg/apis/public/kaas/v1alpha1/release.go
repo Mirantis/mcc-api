@@ -3,10 +3,10 @@ package v1alpha1
 import (
 	"strings"
 
-	"github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	lcm "github.com/Mirantis/mcc-api/pkg/apis/common/lcm/v1alpha1"
+	"github.com/Mirantis/mcc-api/pkg/errors"
 )
 
 // +genclient
@@ -107,7 +107,7 @@ type Distribution struct {
 
 type AllowedNodeLabel struct {
 	Key         string `json:"key"`
-	Value       string `json:"value"`
+	Value       string `json:"value,omitempty"`
 	DisplayName string `json:"displayName"`
 }
 

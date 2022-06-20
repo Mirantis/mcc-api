@@ -125,20 +125,20 @@ func (in *OSmetadataLink) AddNameservers(base *OSmetadataNetworkConfig, addrs []
 // -----------------------------------------------------------------------------
 
 // Generate -- process incoming data and generates NetworkConfig
-func (in *OSmetadataNetworkConfig) Generate(nics *kaasIpam.NicMacMap) {
+func (in *OSmetadataNetworkConfig) Generate(nics kaasIpam.NicMacMap) {
 	in.Links = []OSmetadataLink{}
 	in.Networks = []OSmetadataNetwork{}
 	in.Services = []OSmetadataService{}
 
-	for i := range *nics {
-		if !(*nics)[i].Primary || (*nics)[i].Name == "" || (*nics)[i].MAC == "" || (*nics)[i].IP == "" {
+	for i := range nics {
+		if !nics[i].Primary || nics[i].Name == "" || nics[i].MAC == "" || nics[i].IP == "" {
 			// skip unnamd interface without MAC
 			continue
 		}
 
-		iface := in.AddIface((*nics)[i].MAC, (*nics)[i].Name)
-		iface.AddIPAddr(in, (*nics)[i].IP, (*nics)[i].Gateway)
-		iface.AddNameservers(in, (*nics)[i].Nameservers)
+		iface := in.AddIface(nics[i].MAC, nics[i].Name)
+		iface.AddIPAddr(in, nics[i].IP, nics[i].Gateway)
+		iface.AddNameservers(in, nics[i].Nameservers)
 	}
 }
 

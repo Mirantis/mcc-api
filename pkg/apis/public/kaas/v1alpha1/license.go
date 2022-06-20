@@ -52,8 +52,8 @@ type LicenseStatus struct {
 }
 
 type LicenseLimits struct {
-	Clusters          int `json:"clusters,omitempty"`
-	WorkersPerCluster int `json:"workersPerCluster,omitempty"`
+	Clusters          int `json:"clusters"`
+	WorkersPerCluster int `json:"workersPerCluster"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

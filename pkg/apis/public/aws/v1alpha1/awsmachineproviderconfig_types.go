@@ -79,6 +79,11 @@ type AWSMachineProviderSpec struct {
 	// RootDeviceSize is the size of the root volume.
 	// +optional
 	RootDeviceSize int64 `json:"rootDeviceSize,omitempty"`
+
+	// RootDeviceType specifies volume type of the root storage device
+	// +optional
+	// +kubebuilder:validation:Enum=standard;io1;io2;gp2;sc1;st1;gp3
+	RootDeviceType string `json:"rootDeviceType,omitempty"`
 }
 
 func (*AWSMachineProviderSpec) GetNewMachineStatus() runtime.Object {

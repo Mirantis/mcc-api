@@ -55,3 +55,12 @@ func UpdateCephOsdRemoveRequestStatus(cephRequest *CephOsdRemoveRequest, status 
 	}
 	return nil
 }
+
+func UpdateCephPerfTestRequestStatus(perfTestRequest *CephPerfTestRequest, status *CephPerfTestRequestStatus, client client.Client) error {
+	perfTestRequest.Status = status
+	if err := client.Status().Update(context.TODO(), perfTestRequest); err != nil {
+		return errors.Errorf("failed to update status for the cephPerfTestRequest %v/%v: %v",
+			perfTestRequest.Namespace, perfTestRequest.Name, err)
+	}
+	return nil
+}

@@ -72,7 +72,7 @@ type CephClusterSpec struct {
 	// values
 	RookConfig map[string]string `json:"rookConfig,omitempty"`
 	// Deprecated, all maintenance happens automatically
-	Maintenance bool `json:"maintenance,omitempty"`
+	Maintenance *bool `json:"maintenance,omitempty"`
 	// Deprecated, use ObjectStorage.Rgw instead
 	RGW *miracephv1alpha1.MiraCephRGW `json:"rgw,omitempty"`
 	// Deprecated, create CephOsdRemoveRequest instead
@@ -122,21 +122,47 @@ type CephStorageDeviceReduced struct {
 }
 
 // +k8s:deepcopy-gen=true
-
 // CephOperationRequestSpec is the definition of operation for Ceph cluster
 type CephOperationRequestSpec struct {
 	// OsdRemove is a definition for osd removal
 	OsdRemove *miracephv1alpha1.CephOsdRemoveRequestSpec `json:"osdRemove,omitempty"`
+	PerfTest  *miracephv1alpha1.CephPerfTestRequestSpec  `json:"perfTest,omitempty"`
 }
+
+// RequestPhase is a enum for request phases
+type RequestPhase string
+
+const (
+	// Set on initial create and for PerfTestPending and RequestPhasePending phases
+	RequestPending RequestPhase = "Pending"
+	// Set on PerfTestInProgress and RequestPhaseProcessing and RequestPhaseValidating phases
+	RequestExecuting RequestPhase = "Executing"
+	// Set on PerfTestFinished and RequestPhaseCompleted and RequestPhaseCompletedWithWarnings phases
+	RequestCompleted RequestPhase = "Completed"
+	// Set on PerfTestFailed and RequestPhaseFailed phases
+	RequestFailed RequestPhase = "Failed"
+	// Set on PerfTestWaitingRun and PerfTestScheduling phases
+	RequestWaiting RequestPhase = "Waiting"
+	// Set on RequestPhaseApproveWaiting and RequestPhaseInputWaiting phases
+	RequestAttention RequestPhase = "AttentionRequired"
+	// Set on PerfTestSuspended phase
+	RequestSuspended RequestPhase = "Suspended"
+)
 
 // +k8s:deepcopy-gen=true
 
 // CephOperationRequestStatus is the status of corresponding operation requets
 type CephOperationRequestStatus struct {
+	// Current phase of request run
+	Phase RequestPhase `json:"phase"`
+	// Additional status message
+	Message string `json:"message,omitempty"`
 	// ChildNodesMapping is a key-value mapping which reflects
 	// BareMetal Machine names with their corresponding kubernetes
 	// node names
-	ChildNodesMapping map[string]string `json:"childNodesMapping"`
+	ChildNodesMapping map[string]string `json:"childNodesMapping,omitempty"`
 	// OsdRemoveStatus is a status of a current remove OSD request
 	OsdRemoveStatus *miracephv1alpha1.CephOsdRemoveRequestStatus `json:"osdRemoveStatus,omitempty"`
+	// PerfTestStatus is a status of a current perftest request
+	PerfTestStatus *miracephv1alpha1.CephPerfTestRequestStatus `json:"perfTestStatus,omitempty"`
 }

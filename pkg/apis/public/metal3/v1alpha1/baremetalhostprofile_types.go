@@ -3,10 +3,10 @@ package v1alpha1
 import (
 	"fmt"
 
-	"github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	bmhv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/common/baremetal-operator/metal3.io/v1alpha1"
+	"github.com/Mirantis/mcc-api/pkg/errors"
 )
 
 const (

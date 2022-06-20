@@ -64,7 +64,8 @@ type HelmReleaseSpec struct {
 	// +optional
 	// +kubebuilder:validation:XPreserveUnknownFields
 	Values runtime.RawExtension `json:"values,omitempty"`
-	// HelmV3 specifies whether Helm v3 should be used. Defaults to v2.
+	// Deprecated: HelmV3 specifies whether Helm v3 should be used.
+	// This field is deprecated as Helm v3 is always used.
 	// +optional
 	HelmV3 bool `json:"helmV3,omitempty"`
 	// List of releases that must be installed and ready in order for this release to be installed
@@ -90,7 +91,7 @@ type HelmReleaseStatus struct {
 	Success bool `json:"success"`
 	// Status of the release
 	Status string `json:"status"`
-	// HelmV3 indicates whether the release was installed with Helm v3.
+	// Deprecated: HelmV3 indicates whether the release was installed with Helm v3.
 	// +optional
 	HelmV3 bool `json:"helmV3"`
 	// Notes contain the rendered notes for this release.

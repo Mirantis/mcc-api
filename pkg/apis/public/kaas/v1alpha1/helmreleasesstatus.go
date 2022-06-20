@@ -1,6 +1,7 @@
 package v1alpha1
 
 import (
+	"context"
 	"net"
 	"net/url"
 	"strconv"
@@ -35,8 +36,8 @@ func formatURL(scheme, host string, port int) *url.URL {
 	return &url.URL{Scheme: scheme, Host: host}
 }
 
-func (cs *ComponentStatus) UpdateURL(client crclient.Client, serviceNamespace, serviceName string, scheme string, port int) error {
-	host, err := k8s.ServiceExternalAddress(client, serviceNamespace, serviceName)
+func (cs *ComponentStatus) UpdateURL(ctx context.Context, client crclient.Client, serviceNamespace, serviceName string, scheme string, port int) error {
+	host, err := k8s.ServiceExternalAddress(ctx, client, serviceNamespace, serviceName)
 	if err != nil {
 		if k8serrors.IsNotFound(errors.Cause(err)) {
 			cs.URL = ""

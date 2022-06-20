@@ -25,7 +25,6 @@ package v1alpha1
 import (
 	"context"
 
-	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	crclient "sigs.k8s.io/controller-runtime/pkg/client"
@@ -33,6 +32,7 @@ import (
 
 	clusterv1 "github.com/Mirantis/mcc-api/pkg/apis/public/cluster/v1alpha1"
 	"github.com/Mirantis/mcc-api/pkg/apis/public/vsphere"
+	"github.com/Mirantis/mcc-api/pkg/errors"
 )
 
 var (

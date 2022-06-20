@@ -92,6 +92,10 @@ func (c *FakeKaasV1alpha1) MCCUpgrades() v1alpha1.MCCUpgradeInterface {
 	return &FakeMCCUpgrades{c}
 }
 
+func (c *FakeKaasV1alpha1) MachinePools(namespace string) v1alpha1.MachinePoolInterface {
+	return &FakeMachinePools{c, namespace}
+}
+
 func (c *FakeKaasV1alpha1) OpenStackCredentials(namespace string) v1alpha1.OpenStackCredentialInterface {
 	return &FakeOpenStackCredentials{c, namespace}
 }

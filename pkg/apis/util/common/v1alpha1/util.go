@@ -1,13 +1,13 @@
 package util
 
 import (
-	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
 
 	publicapi "github.com/Mirantis/mcc-api/pkg/apis/public"
 	clusterv1 "github.com/Mirantis/mcc-api/pkg/apis/public/cluster/v1alpha1"
 	"github.com/Mirantis/mcc-api/pkg/apis/public/kaas/v1alpha1"
+	"github.com/Mirantis/mcc-api/pkg/errors"
 )
 
 type ClusterSpecGetter interface {
@@ -122,19 +122,23 @@ func GetClusterStatus(cluster *clusterv1.Cluster) (*v1alpha1.ClusterStatusMixin,
 	return casted.GetClusterStatusMixin(), nil
 }
 
-func GetMachineSpecObj(machine *clusterv1.Machine) (runtime.Object, error) {
-	if machine.Spec.ProviderSpec.Value == nil {
-		return nil, errors.New("no providerSpec in Machine object")
+func DecodeMachineSpecObj(spec *clusterv1.MachineSpec) (runtime.Object, error) {
+	if spec.ProviderSpec.Value == nil {
+		return nil, errors.New("no providerSpec given")
 	}
-	obj, err := decodeExtension(machine.Spec.ProviderSpec.Value)
+	obj, err := decodeExtension(spec.ProviderSpec.Value)
 	if err != nil {
 		return nil, err
 	}
 	return obj, nil
 }
 
-func GetMachineSpec(machine *clusterv1.Machine) (*v1alpha1.MachineSpecMixin, error) {
-	obj, err := GetMachineSpecObj(machine)
+func GetMachineSpecObj(machine *clusterv1.Machine) (runtime.Object, error) {
+	return DecodeMachineSpecObj(&machine.Spec)
+}
+
+func DecodeMachineSpec(spec *clusterv1.MachineSpec) (*v1alpha1.MachineSpecMixin, error) {
+	obj, err := DecodeMachineSpecObj(spec)
 	if err != nil {
 		return nil, err
 	}
@@ -143,6 +147,10 @@ func GetMachineSpec(machine *clusterv1.Machine) (*v1alpha1.MachineSpecMixin, err
 		return nil, errors.Errorf("decoded object of type %T doesn't implement GetMachineSpecMixin func", obj)
 	}
 	return casted.GetMachineSpecMixin(), nil
+}
+
+func GetMachineSpec(machine *clusterv1.Machine) (*v1alpha1.MachineSpecMixin, error) {
+	return DecodeMachineSpec(&machine.Spec)
 }
 
 func GetMachineStatusObj(machine *clusterv1.Machine) (runtime.Object, error) {
