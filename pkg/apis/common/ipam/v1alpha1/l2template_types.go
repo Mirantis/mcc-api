@@ -67,6 +67,7 @@ const (
 type L2TemplateStatus struct {
 	Phase            string `json:"phase"`
 	Reason           string `json:"reason,omitempty"`
+	SpecHash         string `json:"specHash,omitempty"`
 	ObjCreated       string `json:"objCreated,omitempty"`
 	ObjUpdated       string `json:"objUpdated,omitempty"`
 	ObjStatusUpdated string `json:"objStatusUpdated,omitempty"`

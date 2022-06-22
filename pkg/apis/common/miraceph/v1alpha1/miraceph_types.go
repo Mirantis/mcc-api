@@ -93,13 +93,16 @@ type MiraCephFS struct {
 	Name string `json:"name"`
 	// The settings used to create the filesystem metadata pool. Must use replication.
 	MetadataPool MiraCephPoolSpec `json:"metadataPool"`
-	// The settings to create the filesystem data pool. Must use replication.
-	DataPool MiraCephPoolSpec `json:"dataPool"`
+	// The settings to create the filesystem data pools. Must use replication.
+	DataPools []MiraCephFsPool `json:"dataPools,omitempty"`
 	// When set to ‘true’ the filesystem will remain when the CephFilesystem resource is deleted
 	// This is a security measure to avoid loss of data if the CephFilesystem resource is deleted accidentally.
 	PreserveFilesystemOnDelete bool `json:"preserveFilesystemOnDelete,omitempty"`
 	// Metadata server settings correspond to the MDS daemon settings
 	MetadataServer MiraCephMetadataServer `json:"metadataServer"`
+	// The settings to create the filesystem data pool. Must use replication.
+	// Deprecated, use array definition `dataPools` instead.
+	DataPool *MiraCephPoolSpec `json:"dataPool,omitempty"`
 }
 
 type MiraCephMetadataServer struct {
@@ -142,14 +145,14 @@ type MiraValidation struct {
 type MiraPhase string
 
 const (
-	PhaseCreating   MiraPhase = "Creating"
-	PhaseDeploying  MiraPhase = "Deploying"
-	PhaseValidation MiraPhase = "Validation"
-	PhaseReady      MiraPhase = "Ready"
-	PhaseOnHold     MiraPhase = "OnHold"
-	PhaseUpgrading  MiraPhase = "Upgrading"
-	PhaseDeleting   MiraPhase = "Deleting"
-	PhaseFailed     MiraPhase = "Failed"
+	PhaseCreating    MiraPhase = "Creating"
+	PhaseDeploying   MiraPhase = "Deploying"
+	PhaseValidation  MiraPhase = "Validation"
+	PhaseReady       MiraPhase = "Ready"
+	PhaseOnHold      MiraPhase = "OnHold"
+	PhaseMaintenance MiraPhase = "Maintenance"
+	PhaseDeleting    MiraPhase = "Deleting"
+	PhaseFailed      MiraPhase = "Failed"
 )
 
 // MiraCephStatus defines the observed state of MiraCeph
@@ -164,6 +167,10 @@ type MiraCephStatus struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:printcolumn:name="Age",type=date,JSONPath=`.metadata.creationTimestamp`
+// +kubebuilder:printcolumn:name="Validation",type=string,JSONPath=`.status.validation.result`,description="Validation status"
+// +kubebuilder:printcolumn:name="Phase",type=string,JSONPath=`.status.phase`,description="Deployment phase"
+// +kubebuilder:printcolumn:name="Message",type=string,JSONPath=`.status.message`,description="Cluster status message"
 // +kubebuilder:resource:path=miracephs,scope=Namespaced
 // +kubebuilder:subresource:status
 // +genclient
@@ -394,6 +401,14 @@ type MiraCephNode struct {
 	Resources *v1.ResourceRequirements `json:"resources,omitempty"`
 
 	cephv1.Selection `json:",inline"`
+}
+
+// MiraCephFsPool stands for specified CephFS Pool configuration
+type MiraCephFsPool struct {
+	// Name represents CephFS pool name
+	Name string `json:"name"`
+
+	MiraCephPoolSpec `json:",inline"`
 }
 
 // MiraCephPool stands for specified Ceph RBD Pool configuration

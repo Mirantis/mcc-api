@@ -88,6 +88,9 @@ type KaaS struct {
 type ManagementClusterSpec struct {
 	Enabled      bool          `json:"enabled"`
 	HelmReleases []HelmRelease `json:"helmReleases,omitempty"`
+	// AutoSyncSalesForceConfig defines if SalesForce config of Management cluster
+	// should be propagated to all regional and child clusters.
+	AutoSyncSalesForceConfig bool `json:"autoSyncSalesForceConfig,omitempty"`
 }
 
 type RegionalClusterSpec struct {

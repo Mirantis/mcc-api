@@ -60,8 +60,8 @@ const (
 
 // PreprovisioningImageStatus defines the observed state of PreprovisioningImage
 type PreprovisioningImageStatus struct {
-	// ImageURL is the URL from which the built image can be downloaded.
-	ImageURL string `json:"imageUrl,omitempty"`
+	// imageUrl is the URL from which the built image can be downloaded.
+	ImageUrl string `json:"imageUrl,omitempty"`
 
 	// format is the type of image that is available at the download url:
 	// either iso or initrd.
@@ -86,7 +86,7 @@ type PreprovisioningImageStatus struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +kubebuilder:object:root=true
+//+kubebuilder:object:root=true
 // +kubebuilder:resource:shortName=ppimg
 // +kubebuilder:printcolumn:name="Ready",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status",description="Whether the image is ready"
 // +kubebuilder:printcolumn:name="Reason",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].reason",description="The reason for the image readiness status"
@@ -101,8 +101,8 @@ type PreprovisioningImage struct {
 	Status PreprovisioningImageStatus `json:"status,omitempty"`
 }
 
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // PreprovisioningImageList contains a list of PreprovisioningImage
 type PreprovisioningImageList struct {

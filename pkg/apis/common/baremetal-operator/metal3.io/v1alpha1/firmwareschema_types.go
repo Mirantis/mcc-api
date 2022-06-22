@@ -66,7 +66,8 @@ func (e SchemaSettingError) Error() string {
 }
 
 func (schema *SettingSchema) Validate(name string, value intstr.IntOrString) error {
-	if *schema.ReadOnly {
+
+	if schema.ReadOnly != nil && *schema.ReadOnly == true {
 		return SchemaSettingError{name: name, message: "it is ReadOnly"}
 	}
 
@@ -136,7 +137,6 @@ type FirmwareSchemaSpec struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 //+kubebuilder:object:root=true
-
 // FirmwareSchema is the Schema for the firmwareschemas API
 type FirmwareSchema struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -147,6 +147,7 @@ type FirmwareSchema struct {
 
 // Check whether the setting's name and value is valid using the schema
 func (host *FirmwareSchema) ValidateSetting(name string, value intstr.IntOrString, schemas map[string]SettingSchema) error {
+
 	schema, ok := schemas[name]
 	if !ok {
 		return SchemaSettingError{name: name, message: "it is not in the associated schema"}
@@ -156,7 +157,6 @@ func (host *FirmwareSchema) ValidateSetting(name string, value intstr.IntOrStrin
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-//+kubebuilder:object:root=true
 
 // FirmwareSchemaList contains a list of FirmwareSchema
 type FirmwareSchemaList struct {

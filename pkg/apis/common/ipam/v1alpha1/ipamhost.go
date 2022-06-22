@@ -38,21 +38,11 @@ func (in IpamHostStatus) String() (rv string) {
 	return rv
 }
 
-func (in *IpamHostStatus) Warning(msg string) {
-	in.Warnings = in.Warnings.Append(msg)
+func (in *IpamHostStatus) AddMessage(msg string) {
+	in.Messages = in.Messages.Append(msg)
 }
 
 //-----------------------------------------------------------------------------
-
-func (in *IpamHost) AllocatedIPs() int {
-	rv := 0
-	for i := range in.Status.NicMacMap {
-		if in.Status.NicMacMap[i].IPref != "" && in.Status.NicMacMap[i].IP != "" {
-			rv++
-		}
-	}
-	return rv
-}
 
 func (in *IpamHost) getRefFromLabel(kind string) (rv *types.NamespacedName, err error) {
 	labels := in.GetLabels()

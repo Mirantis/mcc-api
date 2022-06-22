@@ -20,6 +20,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
+	commonerrors "github.com/Mirantis/mcc-api/pkg/apis/public/cluster/common"
 	"github.com/Mirantis/mcc-api/pkg/apis/public/equinix/v1alpha1"
 	kaasv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/public/kaas/v1alpha1"
 )
@@ -72,6 +73,14 @@ type NetworkStatus struct {
 	// +optional
 	NetworkName string `json:"networkName,omitempty"`
 }
+
+const (
+	NonCompliantStorageError commonerrors.MachineStatusError = "NonCompliantStorageError"
+
+	InspectionError          commonerrors.MachineStatusError = "InspectionError"
+	ProvisioningError        commonerrors.MachineStatusError = "ProvisioningError"
+	MachineInaccessibleError commonerrors.MachineStatusError = "MachineInaccessibleError"
+)
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

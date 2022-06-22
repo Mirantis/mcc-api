@@ -22,9 +22,11 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/serializer"
 
 	miracephv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/common/miraceph/v1alpha1"
+	autoscalerv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/public/autoscaler/v1alpha1"
 	azurev1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/public/azure/v1alpha1"
 	bmv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/public/baremetal/v1alpha1"
 	byov1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/public/byo/v1alpha1"
+	dnsv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/public/dns/v1alpha1"
 	equinixv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/public/equinix/v1alpha1"
 	iamv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/public/iam/v1alpha1"
 	kaasv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/public/kaas/v1alpha1"
@@ -45,6 +47,8 @@ var AddToSchemes = runtime.SchemeBuilder{
 	azurev1alpha1.SchemeBuilder.AddToScheme,
 	storagev1alpha1.SchemeBuilder.AddToScheme,
 	iamv1alpha1.SchemeBuilder.AddToScheme,
+	autoscalerv1alpha1.SchemeBuilder.AddToScheme,
+	dnsv1alpha1.SchemeBuilder.AddToScheme,
 }
 
 // AddToScheme adds all Resources to the Scheme
