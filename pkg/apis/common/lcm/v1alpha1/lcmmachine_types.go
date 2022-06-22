@@ -291,6 +291,7 @@ type Storage struct {
 
 type Disk struct {
 	// Serial number of disk
+	// +optional
 	SerialNumber string `json:"serialNumber"`
 	// Name of disk
 	Name string `json:"name"`
@@ -299,10 +300,13 @@ type Disk struct {
 	// Type of disk (example: hdd, ssd, fdd, odd)
 	Type string `json:"type"`
 	// Vendor name (example: ATA)
+	// +optional
 	Vendor string `json:"vendor"`
 	// Model name (example: VBOX_HARDDISK)
+	// +optional
 	Model string `json:"model"`
 	// Databus
+	// +optional
 	BusPath string `json:"busPath"`
 	// Path to disk by path
 	ByPath string `json:"byPath"`
@@ -321,6 +325,12 @@ type DiskPartition struct {
 	// Label of disk partition
 	// +optional
 	Label string `json:"label"`
+	// Path to part of disk by path
+	// +optional
+	ByPath string `json:"byPath"`
+	// Path to part of disk by ID
+	// +optional
+	ByID string `json:"byID"`
 }
 
 type Network struct {

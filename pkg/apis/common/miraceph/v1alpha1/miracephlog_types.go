@@ -134,8 +134,35 @@ type CephDetails struct {
 	DiskUsageDetails DiskUsageDetails `json:"diskUsage,omitempty"`
 	// DeviceMapping contains information on which node runs each osds and what disk it's using
 	DeviceMapping map[string]DeviceMapping `json:"deviceMapping,omitempty"`
+	// CephEvents contains info about current ceph events happen in Ceph cluster
+	CephEvents CephEvents `json:"cephEvents,omitempty"`
 	// deprecated, CephDeviceMapping contains information on which node runs each osds and what disk it's using
 	CephDeviceMapping map[string]OsdDeviceMapping `json:"cephDeviceMapping,omitempty"`
+}
+
+const (
+	CephEventIdle        CephEventState = "Idle"
+	CephEventProgressing CephEventState = "Progressing"
+)
+
+type CephEventState string
+
+type CephEvents struct {
+	// RebalanceDetails contains info about current rebalancing processes happen in Ceph cluster
+	RebalanceDetails CephEventDetails `json:"rebalanceDetails,omitempty"`
+	// PgAutoscalerDetails contains info about current pg autoscaler events happen in Ceph cluster
+	PgAutoscalerDetails CephEventDetails `json:"PgAutoscalerDetails,omitempty"`
+}
+
+type CephEventDetails struct {
+	State    CephEventState     `json:"state,omitempty"`
+	Messages []CephEventMessage `json:"messages,omitempty"`
+	Progress string             `json:"progress,omitempty"`
+}
+
+type CephEventMessage struct {
+	Message  string `json:"message,omitempty"`
+	Progress string `json:"progress,omitempty"`
 }
 
 // DiskUsageDetails deprecated
