@@ -90,7 +90,7 @@ func (in *SubnetPool) AllocateSubnet(s *Subnet) (cidr, gw string, ns []string, e
 
 	_, poolCIDR, err := net.ParseCIDR(in.Spec.CIDR)
 	if err != nil {
-		return "", "", []string{}, fmt.Errorf("wrong CIDR '%s': %w", in.Spec.CIDR, err)
+		return "", "", []string{}, fmt.Errorf("Wrong CIDR '%s': %w", in.Spec.CIDR, err)
 	}
 	if cached := in.Status.AllocatedSubnets.GetByUID(s.GetPermanentID()); cached != "" {
 		tmp := strings.Split(cached, ":")
@@ -111,7 +111,7 @@ func (in *SubnetPool) AllocateSubnet(s *Subnet) (cidr, gw string, ns []string, e
 
 		allocatdBlock = poolNet32.GetFreeBlock(uint8(in.GetBlockSize()), allocatedList)
 		if allocatdBlock.Empty() {
-			return "", "", []string{}, fmt.Errorf("Net from SubnetPool: %w ", k8types.ErrorUnableToAllocate) //nolint:stylecheck
+			return "", "", []string{}, fmt.Errorf("%w Net from SubnetPool.", k8types.ErrorUnableToAllocate)
 		}
 
 		cidr = allocatdBlock.String()

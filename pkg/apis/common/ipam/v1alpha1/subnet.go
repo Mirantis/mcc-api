@@ -19,14 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
 	"fmt"
 	"net"
 	"regexp"
 	"strings"
 
-	"k8s.io/apimachinery/pkg/types"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/yaml"
 
 	"github.com/Mirantis/mcc-api/pkg/apis/common/ipam/config"
@@ -128,21 +125,6 @@ func (in SubnetStatus) String() (rv string) {
 		rv = fmt.Sprintf("---\n%s\n", string(buff))
 	}
 	return rv
-}
-
-func GetSubnet(ctx context.Context, cl client.Client, name string, namespaces []string) (subnet *Subnet, err error) {
-	subnet = &Subnet{}
-	for i := range namespaces {
-		nn := types.NamespacedName{
-			Name:      name,
-			Namespace: namespaces[i],
-		}
-		err = cl.Get(ctx, nn, subnet)
-		if err == nil {
-			break
-		}
-	}
-	return subnet, err
 }
 
 //-----------------------------------------------------------------------------

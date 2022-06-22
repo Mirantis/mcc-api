@@ -42,6 +42,7 @@ type KaasV1alpha1Interface interface {
 	LicensesGetter
 	MCCCertificateRequestsGetter
 	MCCUpgradesGetter
+	MachinePoolsGetter
 	OpenStackCredentialsGetter
 	OpenStackResourcesesGetter
 	ProxiesGetter
@@ -119,6 +120,10 @@ func (c *KaasV1alpha1Client) MCCCertificateRequests(namespace string) MCCCertifi
 
 func (c *KaasV1alpha1Client) MCCUpgrades() MCCUpgradeInterface {
 	return newMCCUpgrades(c)
+}
+
+func (c *KaasV1alpha1Client) MachinePools(namespace string) MachinePoolInterface {
+	return newMachinePools(c, namespace)
 }
 
 func (c *KaasV1alpha1Client) OpenStackCredentials(namespace string) OpenStackCredentialInterface {

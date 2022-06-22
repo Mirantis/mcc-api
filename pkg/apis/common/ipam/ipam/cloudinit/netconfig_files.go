@@ -122,7 +122,7 @@ func (in NetconfigFiles) GetNetplanBase64() string {
 func (in NetconfigFiles) GetNetplan() (*UserDataNetworkV2, error) {
 	b64 := in.GetNetplanBase64()
 	if b64 == "" {
-		return nil, fmt.Errorf("Netplan config %w", k8types.ErrorNotFound) //nolint:stylecheck
+		return nil, fmt.Errorf("Netplan config %w", k8types.ErrorNotFound)
 	}
 
 	netplanYaml, err := base64.StdEncoding.DecodeString(b64)

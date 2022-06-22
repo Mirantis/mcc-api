@@ -51,6 +51,7 @@ type AWSClusterProviderSpec struct {
 // Bastion configuration for AWS cluster object
 type BastionSpec struct {
 	Image           string `json:"amiId,omitempty"`
+	InstanceType    string `json:"instanceType,omitempty"`
 	RedeployAllowed bool   `json:"redeployAllowed,omitempty"`
 }
 

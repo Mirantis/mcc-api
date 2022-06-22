@@ -27,6 +27,9 @@ var SupportedProviders = []string{
 }
 
 const (
+	TimeInputFormatRFC3339  = "2006-01-02T15:04:05.99999Z07"
+	TimeOutputFormatRFC3339 = "2006-01-02T15:04:05.00000Z07"
+
 	RequiredCRDsWaitTime        time.Duration = 10 * time.Minute
 	RequiredCRDsWaitDelay       time.Duration = 5 * time.Second
 	RequeueLongWaitTime         time.Duration = 3 * time.Minute
@@ -43,7 +46,7 @@ const (
 	PermanentIDlabel                  = "ipam/PermanentID"
 	MacLabel                          = "ipam/MAC"
 	IPlabel                           = "ipam/IP"
-	IpUidLabel                        = "ipam/IP-UID-" //nolint:revive,stylecheck
+	IpUidLabel                        = "ipam/IP-UID-" //nolint:golint
 	SubnetIDLabel                     = "ipam/SubnetID"
 	SubnetPoolIDLabel                 = "ipam/SubnetPoolID"
 	DefaultSubnetLabel                = "ipam/DefaultSubnet"
@@ -74,10 +77,11 @@ const (
 
 	AllocationReqAnnotationPrefix = "ipam/AllocationReq-"
 	ForcedDeletionAnnotation      = "ipam/ForcedDeletion"
+	ForcedUpdateAnnotation        = "ipam/ForcedUpdate"
 
 	CustomFinalizer             = "finalizer.ipam.mirantis.com"
 	ForegroundDeletionFinalizer = "foregroundDeletion"
-	NeedUpdateKey               = "ipam/need-update"
+	ReqToReconcileAnnotation    = "ipam/req-to-reconcile"
 	DefaultConfigFile           = "/etc/cluster-api-provider/conf"
 
 	SvcLBserviceName    = "LBhost"
@@ -85,7 +89,13 @@ const (
 	SvcMtLbServiceName  = "MetalLB"
 	SvcMtLbServiceLabel = PerServiceLabelPrefix + SvcMtLbServiceName
 
-	NetconfigFilesStateOK           = "OK"
-	NetconfigFilesStateInconsistent = NetconfigFilesStateOK + ", inconsistent"
-	NetconfigFilesStateERR          = "ERR"
+	NetconfigFilesStateOK  = "OK"
+	NetconfigFilesStateERR = "ERR"
+
+	NetconfigUpdateModeGracePeriod = "MANUAL-GRACEPERIOD"
+	NetconfigUpdateModeManual      = "MANUAL"
+	NetconfigUpdateModeAuto        = "AUTO"
+	NetconfigUpdateModeAutoUnsafe  = "AUTO-UNSAFE"
 )
+
+var NetconfigUpdateGracePeriod = 3 * time.Hour

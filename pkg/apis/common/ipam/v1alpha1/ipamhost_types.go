@@ -29,26 +29,27 @@ import (
 
 // IpamHostSpec defines the desired state of IpamHost
 type IpamHostSpec struct {
-	NicMacMap          kaasIpam.NicMacMap           `json:"nicMACmap,omitempty"`
-	AllocationStatus   string                       `json:"allocationStatus,omitempty"` // empty if IpamHost should be created in non-Invalid state
-	L2TemplateSelector *kaasIpam.L2TemplateSelector `json:"l2TemplateSelector,omitempty"`
-	NpTemplateOverride l2tmplTypes.NpTemplate       `json:"npTemplateOverride,omitempty"`
-	IfMappingOverride  l2tmplTypes.IfMapping        `json:"ifMappingOverride,omitempty"`
+	NicMacMap            kaasIpam.NicMacMap           `json:"nicMACmap,omitempty"`
+	AllocationStatus     string                       `json:"allocationStatus,omitempty"` // empty if IpamHost should be created in non-Invalid state
+	L2TemplateSelector   *kaasIpam.L2TemplateSelector `json:"l2TemplateSelector,omitempty"`
+	NpTemplateOverride   l2tmplTypes.NpTemplate       `json:"npTemplateOverride,omitempty"`
+	IfMappingOverride    l2tmplTypes.IfMapping        `json:"ifMappingOverride,omitempty"`
+	NetconfigUpdateMode  string                       `json:"netconfigUpdateMode"`
+	NetconfigUpdateAllow bool                         `json:"netconfigUpdateAllow"`
 }
 
 // IpamHostStatus defines the observed state of IpamHost
 type IpamHostStatus struct {
-	NicMacMap           kaasIpam.NicMacMap                 `json:"nicMACmap,omitempty"`
 	NetconfigV2         *cloudinit.UserDataNetworkV2       `json:"netconfigV2"`
+	NetconfigV2state    cloudinit.StateString              `json:"netconfigV2state"`
 	NetconfigFiles      cloudinit.NetconfigFiles           `json:"netconfigFiles"`
-	NetconfigFilesState string                             `json:"netconfigFilesState"`
+	NetconfigFilesState cloudinit.StateString              `json:"netconfigFilesState"`
 	ServiceMap          kiTypes.Services2IfAddressPlan     `json:"serviceMap,omitempty"`
 	OSmetadataNetwork   *cloudinit.OSmetadataNetworkConfig `json:"osMetadataNetwork,omitempty"`
 	AllocationResult    string                             `json:"ipAllocationResult,omitempty"`
-	ErrorMessage        string                             `json:"errorMessage,omitempty"`
 	L2TemplateRef       string                             `json:"l2TemplateRef,omitempty"`
 	L2RenderResult      string                             `json:"l2RenderResult,omitempty"`
-	Warnings            k8sutilTypes.WarningsList          `json:"Warnings,omitempty"`
+	Messages            k8sutilTypes.Messages              `json:"messages,omitempty"`
 	ObjCreated          string                             `json:"objCreated,omitempty"`
 	ObjUpdated          string                             `json:"objUpdated,omitempty"`
 	ObjStatusUpdated    string                             `json:"objStatusUpdated,omitempty"`

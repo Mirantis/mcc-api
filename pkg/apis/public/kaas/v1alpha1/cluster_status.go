@@ -3,25 +3,27 @@ package v1alpha1
 import (
 	"context"
 
-	"github.com/pkg/errors"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/util/intstr"
+	"k8s.io/klog"
 	deploymentutil "k8s.io/kubectl/pkg/util/deployment"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	lcmv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/common/lcm/v1alpha1"
 	clusterv1 "github.com/Mirantis/mcc-api/pkg/apis/public/cluster/v1alpha1"
+	"github.com/Mirantis/mcc-api/pkg/errors"
 )
 
 // mandatoryReadinessCheckNamespaces list of namespaces resources to check for notReadyKaasObjects
 var mandatoryReadinessCheckNamespaces = map[string]bool{"kube-system": true, "kaas": true}
 var excludedReadinessCheckNamespaces = map[string]bool{"default": true}
 
-func (s *ClusterStatusMixin) UpdateClusterState(cl, regionalClient client.Client, cluster *clusterv1.Cluster) error {
+func (s *ClusterStatusMixin) UpdateClusterState(ctx context.Context, cl, regionalClient client.Client, cluster *clusterv1.Cluster) error {
+	klog.Infof("Updating cluster state %v/%v with the list of not ready resources", cluster.Namespace, cluster.Name)
 	// getting namespace list to check the object readinness
-	nsList, err := GetNamespacesList(regionalClient, cluster)
+	nsList, err := GetNamespacesList(ctx, regionalClient, cluster)
 	if err != nil {
 		return errors.Wrapf(err, "failed to get helmbundle related object namespaces for cluster %s/%s", cluster.Namespace, cluster.Name)
 	}
@@ -174,11 +176,11 @@ func isDaemonSetReady(ds *appsv1.DaemonSet) (bool, DaemonSet) {
 }
 
 // GetNamespacesList returns list of namspaces from cluster related helmbudle. The mandatory and excluded values are took into account
-func GetNamespacesList(cl client.Client, cluster *clusterv1.Cluster) ([]string, error) {
+func GetNamespacesList(ctx context.Context, cl client.Client, cluster *clusterv1.Cluster) ([]string, error) {
 	namespaces := mandatoryReadinessCheckNamespaces
 	// Get Helmbundle related namespace values
 	helmBundle := &lcmv1alpha1.HelmBundle{}
-	err := cl.Get(context.TODO(), client.ObjectKey{Namespace: cluster.Namespace, Name: cluster.Name}, helmBundle)
+	err := cl.Get(ctx, client.ObjectKey{Namespace: cluster.Namespace, Name: cluster.Name}, helmBundle)
 	if err != nil {
 		if k8serrors.IsNotFound(errors.Cause(err)) {
 			return getNamespaces(namespaces), nil

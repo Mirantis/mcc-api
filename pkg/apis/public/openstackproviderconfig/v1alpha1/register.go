@@ -20,7 +20,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	crclient "sigs.k8s.io/controller-runtime/pkg/client"
@@ -28,6 +27,7 @@ import (
 	"sigs.k8s.io/yaml"
 
 	clusterv1 "github.com/Mirantis/mcc-api/pkg/apis/public/cluster/v1alpha1"
+	"github.com/Mirantis/mcc-api/pkg/errors"
 )
 
 const GroupName = "openstackproviderconfig"

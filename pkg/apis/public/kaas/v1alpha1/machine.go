@@ -27,7 +27,7 @@ type MachineSpecMixin struct {
 
 type NodeLabel struct {
 	Key   string `json:"key"`
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 type PublicKeyRef struct {
@@ -49,7 +49,7 @@ type MachineStatusMixin struct {
 	Hardware              MachineHardware          `json:"hardware,omitempty"`
 	ProviderInstanceState InstanceState            `json:"providerInstanceState,omitempty"`
 	Maintenance           bool                     `json:"maintenance,omitempty"`
-	ConditionsSummary     `json:",inline"`
+	ConditionsSummary
 }
 
 type MachineHardware struct {

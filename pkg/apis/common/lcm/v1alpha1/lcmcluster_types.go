@@ -1,19 +1,3 @@
-/*
-Copyright 2019 The Mirantis Inc.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package v1alpha1
 
 import (
@@ -22,10 +6,9 @@ import (
 	"fmt"
 	"time"
 
+	errs "github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-
-	errs "github.com/Mirantis/mcc-api/pkg/errors"
 )
 
 const (
@@ -167,6 +150,9 @@ type LCMClusterSpec struct {
 	// LCMType contains the LCM distribution type
 	// +kubebuilder:validation:Enum=ucp;byo;k0s
 	LCMType LCMType `json:"lcmType,omitempty"`
+
+	// Version of LCM agent machines of this cluster should have
+	AgentVersion string `json:"agentVesrion,omitempty"`
 }
 
 // GetTokenTTL returns TokenTTL value for the cluster
@@ -277,6 +263,18 @@ func (c *LCMCluster) IsDedicatedControlPlane() bool {
 		return true
 	}
 	return *c.Spec.DedicatedControlPlane
+}
+
+func (c *LCMCluster) IsBYO() bool {
+	return c.Spec.LCMType == LCMTypeBYO
+}
+
+func (c *LCMCluster) IsMKE() bool {
+	return c.Spec.LCMType == LCMTypeMKE
+}
+
+func (c *LCMCluster) IsK0s() bool {
+	return c.Spec.LCMType == LCMTypeK0s
 }
 
 func init() {

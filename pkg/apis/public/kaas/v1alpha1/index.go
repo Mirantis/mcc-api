@@ -4,8 +4,9 @@ import (
 	"sort"
 
 	"github.com/Masterminds/semver"
-	"github.com/pkg/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"github.com/Mirantis/mcc-api/pkg/errors"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

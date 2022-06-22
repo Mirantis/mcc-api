@@ -816,6 +816,28 @@ func (host *BareMetalHost) BootMode() BootMode {
 	return mode
 }
 
+// setLabel updates the given label when necessary and returns true
+// when a change is made or false when no change is made.
+func (host *BareMetalHost) setLabel(name, value string) bool {
+	if host.Labels == nil {
+		host.Labels = make(map[string]string)
+	}
+	if host.Labels[name] != value {
+		host.Labels[name] = value
+		return true
+	}
+	return false
+}
+
+// getLabel returns the value associated with the given label. If
+// there is no value, an empty string is returned.
+func (host *BareMetalHost) getLabel(name string) string {
+	if host.Labels == nil {
+		return ""
+	}
+	return host.Labels[name]
+}
+
 // HasBMCDetails returns true if the BMC details are set
 func (host *BareMetalHost) HasBMCDetails() bool {
 	return host.Spec.BMC.Address != "" || host.Spec.BMC.CredentialsName != ""
@@ -1039,8 +1061,8 @@ func (image *Image) GetChecksum() (checksum, checksumType string, ok bool) {
 	return
 }
 
+//+kubebuilder:object:root=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +kubebuilder:object:root=true
 
 // BareMetalHostList contains a list of BareMetalHost
 type BareMetalHostList struct {

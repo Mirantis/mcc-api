@@ -87,8 +87,8 @@ type HostFirmwareSettings struct {
 	Status HostFirmwareSettingsStatus `json:"status,omitempty"`
 }
 
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 //+kubebuilder:object:root=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // HostFirmwareSettingsList contains a list of HostFirmwareSettings
 type HostFirmwareSettingsList struct {
