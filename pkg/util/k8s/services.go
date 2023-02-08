@@ -2,12 +2,12 @@ package k8s
 
 import (
 	"context"
-
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
 	crclient "sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+// +gocode:public-api=true
 func ServiceExternalAddress(ctx context.Context, client crclient.Client, namespace, name string) (string, error) {
 	var address string
 	var svc corev1.Service

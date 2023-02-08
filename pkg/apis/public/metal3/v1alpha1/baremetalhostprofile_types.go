@@ -5,8 +5,8 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	bmhv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/common/baremetal-operator/metal3.io/v1alpha1"
-	"github.com/Mirantis/mcc-api/pkg/errors"
+	bmhv1alpha1 "github.com/Mirantis/mcc-api/v2/pkg/apis/common/baremetal-operator/metal3.io/v1alpha1"
+	"github.com/Mirantis/mcc-api/v2/pkg/errors"
 )
 
 const (

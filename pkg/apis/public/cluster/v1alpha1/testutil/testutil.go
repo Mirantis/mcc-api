@@ -16,7 +16,7 @@ limitations under the License.
 
 package testutil
 
-import "github.com/Mirantis/mcc-api/pkg/apis/public/cluster/v1alpha1"
+import "github.com/Mirantis/mcc-api/v2/pkg/apis/public/cluster/v1alpha1"
 
 // GetVanillaCluster return a bare minimum functional cluster resource object
 func GetVanillaCluster() v1alpha1.Cluster {

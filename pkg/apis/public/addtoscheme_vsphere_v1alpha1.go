@@ -17,7 +17,7 @@ limitations under the License.
 package public
 
 import (
-	"github.com/Mirantis/mcc-api/pkg/apis/public/vsphere/v1alpha1"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/public/vsphere/v1alpha1"
 )
 
 func init() {

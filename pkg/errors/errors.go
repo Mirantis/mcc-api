@@ -2,16 +2,17 @@ package errors
 
 import (
 	"fmt"
-
 	"go.uber.org/multierr"
 	"k8s.io/klog"
 )
 
 // Number of callers skipped in the logs for the current function
+// +gocode:public-api=true
 const callersSkipForCurrentFunction = 1
 
 // ErrorCollector contains a collection of errors objects.
 // The object is not threadsafe.
+// +gocode:public-api=true
 type ErrorCollector struct {
 	err error
 	// Description of the error collection.
@@ -22,12 +23,6 @@ type ErrorCollector struct {
 	useDescriptionForLogs bool
 	// Number of callers skipped in the logs
 	callerSkip int
-}
-
-func NewErrorCollector(description string) *ErrorCollector {
-	return &ErrorCollector{
-		description: description,
-	}
 }
 
 // EnableDescriptionInLogs sets the property to add an additional description to the logs.
@@ -127,7 +122,6 @@ func (ec *ErrorCollector) Unwrap() error {
 
 	return ec.err
 }
-
 func (ec *ErrorCollector) append(depth int, err error) {
 	if err == nil {
 		return
@@ -141,4 +135,11 @@ func (ec *ErrorCollector) append(depth int, err error) {
 	}
 
 	klog.InfoDepth(ec.callerSkip+depth+callersSkipForCurrentFunction, errMessage)
+}
+
+// +gocode:public-api=true
+func NewErrorCollector(description string) *ErrorCollector {
+	return &ErrorCollector{
+		description: description,
+	}
 }

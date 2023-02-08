@@ -17,9 +17,9 @@ limitations under the License.
 package public
 
 import (
-	bmv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/common/baremetal-operator/metal3.io/v1alpha1"
-	"github.com/Mirantis/mcc-api/pkg/apis/public/baremetal/v1alpha1"
-	metal3v1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/public/metal3/v1alpha1"
+	bmv1alpha1 "github.com/Mirantis/mcc-api/v2/pkg/apis/common/baremetal-operator/metal3.io/v1alpha1"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/public/baremetal/v1alpha1"
+	metal3v1alpha1 "github.com/Mirantis/mcc-api/v2/pkg/apis/public/metal3/v1alpha1"
 )
 
 func init() {

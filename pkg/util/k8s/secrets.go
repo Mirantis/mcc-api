@@ -2,7 +2,6 @@ package k8s
 
 import (
 	"context"
-
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -10,6 +9,7 @@ import (
 	crclient "sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+// +gocode:public-api=true
 func GetData(secret *corev1.Secret, key string) ([]byte, error) {
 	if secret.Data == nil {
 		return nil, errors.New("secret contains no data")
@@ -20,6 +20,7 @@ func GetData(secret *corev1.Secret, key string) ([]byte, error) {
 	return nil, errors.Errorf("%s key is missing", key)
 }
 
+// +gocode:public-api=true
 func GetDataFromSecret(client crclient.Client, namespace, name, key string) ([]byte, error) {
 	secret, err := GetSecret(client, namespace, name)
 	if err != nil {
@@ -28,6 +29,7 @@ func GetDataFromSecret(client crclient.Client, namespace, name, key string) ([]b
 	return GetData(secret, key)
 }
 
+// +gocode:public-api=true
 func GetSecret(client crclient.Client, namespace, name string) (*corev1.Secret, error) {
 	var secret corev1.Secret
 	err := client.Get(context.TODO(), crclient.ObjectKey{
@@ -40,6 +42,7 @@ func GetSecret(client crclient.Client, namespace, name string) (*corev1.Secret, 
 	return &secret, nil
 }
 
+// +gocode:public-api=true
 func CreateSecret(client crclient.Client, namespace, name string, data map[string][]byte) (*corev1.Secret, error) {
 	secret := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{Name: name, Namespace: namespace},
@@ -53,6 +56,7 @@ func CreateSecret(client crclient.Client, namespace, name string, data map[strin
 	return secret, nil
 }
 
+// +gocode:public-api=true
 func DeleteSecret(client crclient.Client, namespace, name string) error {
 	secret := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{Name: name, Namespace: namespace},

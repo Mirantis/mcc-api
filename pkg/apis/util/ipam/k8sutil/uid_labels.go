@@ -23,8 +23,8 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	kiConfig "github.com/Mirantis/mcc-api/pkg/apis/common/ipam/config"
-	k8types "github.com/Mirantis/mcc-api/pkg/apis/util/ipam/k8sutil/types"
+	kiConfig "github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/config"
+	k8types "github.com/Mirantis/mcc-api/v2/pkg/apis/util/ipam/k8sutil/types"
 )
 
 // EnsureUIDConsistency -- ensere that UIDlabel consistent to object UID

@@ -1,17 +1,24 @@
 package util
 
 import (
-	clusterv1 "github.com/Mirantis/mcc-api/pkg/apis/public/cluster/v1alpha1"
-	"github.com/Mirantis/mcc-api/pkg/apis/public/vsphere/v1alpha1"
-	util "github.com/Mirantis/mcc-api/pkg/apis/util/common/v1alpha1"
-	"github.com/Mirantis/mcc-api/pkg/errors"
+	clusterv1 "github.com/Mirantis/mcc-api/v2/pkg/apis/cluster/v1alpha1"
+	util "github.com/Mirantis/mcc-api/v2/pkg/apis/util/common/v1alpha1"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/vsphere/v1alpha1"
+	"github.com/Mirantis/mcc-api/v2/pkg/errors"
 )
 
-var _ = util.ClusterSpecGetter(&v1alpha1.VsphereClusterProviderSpec{})
-var _ = util.ClusterStatusGetter(&v1alpha1.VsphereClusterProviderStatus{})
-var _ = util.MachineSpecGetter(&v1alpha1.VsphereMachineProviderSpec{})
-var _ = util.MachineStatusGetter(&v1alpha1.VsphereMachineProviderStatus{})
+var (
+	// +gocode:public-api=true
+	_ = util.ClusterSpecGetter(&v1alpha1.VsphereClusterProviderSpec{})
+	// +gocode:public-api=true
+	_ = util.ClusterStatusGetter(&v1alpha1.VsphereClusterProviderStatus{})
+	// +gocode:public-api=true
+	_ = util.MachineSpecGetter(&v1alpha1.VsphereMachineProviderSpec{})
+	// +gocode:public-api=true
+	_ = util.MachineStatusGetter(&v1alpha1.VsphereMachineProviderStatus{})
+)
 
+// +gocode:public-api=true
 func GetClusterSpec(cluster *clusterv1.Cluster) (*v1alpha1.VsphereClusterProviderSpec, error) {
 	obj, err := util.GetClusterSpecObj(cluster)
 	if err != nil {
@@ -24,6 +31,7 @@ func GetClusterSpec(cluster *clusterv1.Cluster) (*v1alpha1.VsphereClusterProvide
 	return spec, err
 }
 
+// +gocode:public-api=true
 func GetClusterStatus(cluster *clusterv1.Cluster) (*v1alpha1.VsphereClusterProviderStatus, error) {
 	obj, err := util.GetClusterStatusObj(cluster)
 	if err != nil {
@@ -36,6 +44,7 @@ func GetClusterStatus(cluster *clusterv1.Cluster) (*v1alpha1.VsphereClusterProvi
 	return status, err
 }
 
+// +gocode:public-api=true
 func GetMachineSpec(machine *clusterv1.Machine) (*v1alpha1.VsphereMachineProviderSpec, error) {
 	obj, err := util.GetMachineSpecObj(machine)
 	if err != nil {
@@ -48,6 +57,7 @@ func GetMachineSpec(machine *clusterv1.Machine) (*v1alpha1.VsphereMachineProvide
 	return spec, err
 }
 
+// +gocode:public-api=true
 func GetMachineStatus(machine *clusterv1.Machine) (*v1alpha1.VsphereMachineProviderStatus, error) {
 	obj, err := util.GetMachineStatusObj(machine)
 	if err != nil {

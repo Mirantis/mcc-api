@@ -22,11 +22,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	ipam "github.com/Mirantis/mcc-api/pkg/apis/common/ipam/ipam"
-	cloudinit "github.com/Mirantis/mcc-api/pkg/apis/common/ipam/ipam/cloudinit"
-	types "github.com/Mirantis/mcc-api/pkg/apis/common/ipam/ipam/l2template/types"
-	ipamtypes "github.com/Mirantis/mcc-api/pkg/apis/common/ipam/ipam/types"
-	k8sutiltypes "github.com/Mirantis/mcc-api/pkg/apis/util/ipam/k8sutil/types"
+	ipam "github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/ipam"
+	cloudinit "github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/ipam/cloudinit"
+	types "github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/ipam/l2template/types"
+	ipamtypes "github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/ipam/types"
+	k8sutiltypes "github.com/Mirantis/mcc-api/v2/pkg/apis/util/ipam/k8sutil/types"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 

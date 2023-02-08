@@ -3,7 +3,7 @@ package v1alpha1
 import (
 	"k8s.io/apimachinery/pkg/runtime"
 
-	lcm "github.com/Mirantis/mcc-api/pkg/apis/common/lcm/v1alpha1"
+	lcm "github.com/Mirantis/mcc-api/v2/pkg/apis/common/lcm/v1alpha1"
 )
 
 type ClusterSpecMixin struct {

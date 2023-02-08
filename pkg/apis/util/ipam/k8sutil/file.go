@@ -5,15 +5,15 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
-	"strings"
-
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/yaml"
+	"os"
 	syaml "sigs.k8s.io/yaml"
+	"strings"
 )
 
+// +gocode:public-api=true
 func File(path string, f func(map[string]interface{}) error) error {
 	file, err := os.Open(path)
 	if err != nil {
@@ -46,6 +46,7 @@ func File(path string, f func(map[string]interface{}) error) error {
 	return nil
 }
 
+// +gocode:public-api=true
 func LoadK8sObjects(fileName string) (objs []runtime.Object, err error) {
 	err = File(fileName, func(obj map[string]interface{}) error {
 		u := &unstructured.Unstructured{}

@@ -106,6 +106,8 @@ type Client struct {
 	Events                 EventService
 	Facilities             FacilityService
 	HardwareReservations   HardwareReservationService
+	Invitations            InvitationService
+	Members                MemberService
 	Metros                 MetroService
 	Notifications          NotificationService
 	OperatingSystems       OSService
@@ -125,6 +127,7 @@ type Client struct {
 	VLANAssignments        VLANAssignmentService
 	VolumeAttachments      VolumeAttachmentService
 	Volumes                VolumeService
+	VRFs                   VRFService
 
 	// DevicePorts
 	//
@@ -338,7 +341,6 @@ func NewClient() (*Client, error) {
 	}
 	c := NewClientWithAuth("packngo lib", apiToken, nil)
 	return c, nil
-
 }
 
 // NewClientWithAuth initializes and returns a Client, use this to get an API Client to operate on
@@ -376,6 +378,8 @@ func NewClientWithBaseURL(consumerToken string, apiKey string, httpClient *http.
 	c.Events = &EventServiceOp{client: c}
 	c.Facilities = &FacilityServiceOp{client: c}
 	c.HardwareReservations = &HardwareReservationServiceOp{client: c}
+	c.Invitations = &InvitationServiceOp{client: c}
+	c.Members = &MemberServiceOp{client: c}
 	c.Metros = &MetroServiceOp{client: c}
 	c.Notifications = &NotificationServiceOp{client: c}
 	c.OperatingSystems = &OSServiceOp{client: c}
@@ -394,6 +398,7 @@ func NewClientWithBaseURL(consumerToken string, apiKey string, httpClient *http.
 	c.VirtualCircuits = &VirtualCircuitServiceOp{client: c}
 	c.VolumeAttachments = &VolumeAttachmentServiceOp{client: c}
 	c.Volumes = &VolumeServiceOp{client: c}
+	c.VRFs = &VRFServiceOp{client: c}
 	c.VLANAssignments = &VLANAssignmentServiceOp{client: c}
 	c.debug = os.Getenv(debugEnvVar) != ""
 
@@ -401,7 +406,6 @@ func NewClientWithBaseURL(consumerToken string, apiKey string, httpClient *http.
 }
 
 func checkResponse(r *http.Response) error {
-
 	if s := r.StatusCode; s >= 200 && s <= 299 {
 		// response is good, return
 		return nil

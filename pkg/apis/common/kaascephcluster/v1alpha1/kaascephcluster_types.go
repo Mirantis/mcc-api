@@ -3,7 +3,7 @@ package v1alpha1
 import (
 	v1 "k8s.io/api/core/v1"
 
-	miracephv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/common/miraceph/v1alpha1"
+	miracephv1alpha1 "github.com/Mirantis/mcc-api/v2/pkg/apis/common/miraceph/v1alpha1"
 )
 
 // +k8s:deepcopy-gen=true

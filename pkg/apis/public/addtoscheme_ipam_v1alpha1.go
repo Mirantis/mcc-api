@@ -17,7 +17,7 @@ limitations under the License.
 package public
 
 import (
-	"github.com/Mirantis/mcc-api/pkg/apis/common/ipam/v1alpha1"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/v1alpha1"
 )
 
 func init() {

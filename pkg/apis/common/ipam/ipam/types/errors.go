@@ -19,7 +19,7 @@ package types
 import (
 	"fmt"
 
-	k8types "github.com/Mirantis/mcc-api/pkg/apis/util/ipam/k8sutil/types"
+	k8types "github.com/Mirantis/mcc-api/v2/pkg/apis/util/ipam/k8sutil/types"
 )
 
 var (

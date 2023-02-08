@@ -3,12 +3,10 @@ package stringedint
 import (
 	"encoding/json"
 	"fmt"
+	k8types "github.com/Mirantis/mcc-api/v2/pkg/apis/util/ipam/k8sutil/types"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	"strconv"
 	"strings"
-
-	"k8s.io/apimachinery/pkg/util/intstr"
-
-	k8types "github.com/Mirantis/mcc-api/pkg/apis/util/ipam/k8sutil/types"
 )
 
 // StringedInt is a type that can hold an int32 or a string.
@@ -22,7 +20,7 @@ import (
 // +protobuf=true
 // +protobuf.options.(gogoproto.goproto_stringer)=false
 // +k8s:openapi-gen=true
-
+// +gocode:public-api=true
 type WrongStringedInt struct {
 	intstr.IntOrString
 }
@@ -34,7 +32,7 @@ func (in WrongStringedInt) MarshalJSON() ([]byte, error) {
 	case intstr.String:
 		rv, err := strconv.Atoi(strings.TrimSpace(in.StrVal))
 		if err == nil {
-			return json.Marshal(fmt.Sprint(rv)) // Pure int to string
+			return json.Marshal(fmt.Sprint(rv))
 		}
 		return json.Marshal(in.StrVal)
 	case intstr.Int:

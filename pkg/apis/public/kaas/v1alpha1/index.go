@@ -6,7 +6,7 @@ import (
 	"github.com/Masterminds/semver"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/Mirantis/mcc-api/pkg/errors"
+	"github.com/Mirantis/mcc-api/v2/pkg/errors"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

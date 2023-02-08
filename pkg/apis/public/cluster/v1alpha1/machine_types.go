@@ -21,7 +21,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 
-	"github.com/Mirantis/mcc-api/pkg/apis/public/cluster/common"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/public/cluster/common"
 )
 
 const (

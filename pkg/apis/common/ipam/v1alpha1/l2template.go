@@ -25,9 +25,9 @@ import (
 	"github.com/thoas/go-funk"
 	"sigs.k8s.io/yaml"
 
-	"github.com/Mirantis/mcc-api/pkg/apis/common/ipam/config"
-	ipam "github.com/Mirantis/mcc-api/pkg/apis/common/ipam/ipam"
-	l2tmplTypes "github.com/Mirantis/mcc-api/pkg/apis/common/ipam/ipam/l2template/types"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/config"
+	ipam "github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/ipam"
+	l2tmplTypes "github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/ipam/l2template/types"
 )
 
 type prioOrderItem struct {

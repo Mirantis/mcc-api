@@ -10,11 +10,11 @@ import (
 
 	"sigs.k8s.io/yaml"
 
-	kaasIpam "github.com/Mirantis/mcc-api/pkg/apis/common/ipam/ipam"
-	kiTypes "github.com/Mirantis/mcc-api/pkg/apis/common/ipam/ipam/types"
-	"github.com/Mirantis/mcc-api/pkg/apis/util/ipam/cidr32"
-	"github.com/Mirantis/mcc-api/pkg/apis/util/ipam/k8sutil/stringedint"
-	k8types "github.com/Mirantis/mcc-api/pkg/apis/util/ipam/k8sutil/types"
+	kaasIpam "github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/ipam"
+	kiTypes "github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/ipam/types"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/util/ipam/cidr32"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/util/ipam/k8sutil/stringedint"
+	k8types "github.com/Mirantis/mcc-api/v2/pkg/apis/util/ipam/k8sutil/types"
 )
 
 // -----------------------------------------------------------------------------

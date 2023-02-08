@@ -26,8 +26,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/scheme"
 	"sigs.k8s.io/yaml"
 
-	clusterv1 "github.com/Mirantis/mcc-api/pkg/apis/public/cluster/v1alpha1"
-	"github.com/Mirantis/mcc-api/pkg/errors"
+	clusterv1 "github.com/Mirantis/mcc-api/v2/pkg/apis/public/cluster/v1alpha1"
+	"github.com/Mirantis/mcc-api/v2/pkg/errors"
 )
 
 const GroupName = "openstackproviderconfig"

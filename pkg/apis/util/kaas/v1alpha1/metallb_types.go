@@ -2,13 +2,12 @@ package v1alpha1
 
 import (
 	"encoding/json"
-
+	kaasv1alpha1 "github.com/Mirantis/mcc-api/v2/pkg/apis/kaas/v1alpha1"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/util/common/helmutil"
 	"github.com/pkg/errors"
-
-	kaasv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/public/kaas/v1alpha1"
-	"github.com/Mirantis/mcc-api/pkg/apis/util/common/helmutil"
 )
 
+// +gocode:public-api=true
 func MetallbAddressPoolFromValues(values interface{}) (kaasv1alpha1.MetallbAddressPool, error) {
 	var addressPool kaasv1alpha1.MetallbAddressPool
 	str, err := json.Marshal(values)
@@ -22,6 +21,7 @@ func MetallbAddressPoolFromValues(values interface{}) (kaasv1alpha1.MetallbAddre
 	return addressPool, nil
 }
 
+// +gocode:public-api=true
 func MetallbAddressPoolsFromChartValues(values helmutil.Values) ([]kaasv1alpha1.MetallbAddressPool, error) {
 	pools := []kaasv1alpha1.MetallbAddressPool{}
 
@@ -44,6 +44,7 @@ func MetallbAddressPoolsFromChartValues(values helmutil.Values) ([]kaasv1alpha1.
 	return pools, nil
 }
 
+// +gocode:public-api=true
 func MetallbAddressPoolsCheckDuplicates(pools []kaasv1alpha1.MetallbAddressPool) (duplicatedNames []string, duplicatesFound bool) {
 	seenNames := map[string]int{}
 	for _, pool := range pools {

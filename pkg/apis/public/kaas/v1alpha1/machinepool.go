@@ -3,7 +3,7 @@ package v1alpha1
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	machinev1 "github.com/Mirantis/mcc-api/pkg/apis/public/cluster/v1alpha1"
+	machinev1 "github.com/Mirantis/mcc-api/v2/pkg/apis/public/cluster/v1alpha1"
 )
 
 // +genclient

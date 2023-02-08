@@ -12,7 +12,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/scheme"
 
-	"github.com/Mirantis/mcc-api/pkg/errors"
+	"github.com/Mirantis/mcc-api/v2/pkg/errors"
 )
 
 var (

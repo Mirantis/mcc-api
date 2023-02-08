@@ -22,7 +22,7 @@ limitations under the License.
 package v1alpha2
 
 import (
-	v1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/public/equinix/v1alpha1"
+	v1alpha1 "github.com/Mirantis/mcc-api/v2/pkg/apis/public/equinix/v1alpha1"
 	v1 "k8s.io/api/core/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )

@@ -4,7 +4,7 @@ import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	kaasmiracephv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/common/kaascephcluster/v1alpha1"
+	kaasmiracephv1alpha1 "github.com/Mirantis/mcc-api/v2/pkg/apis/common/kaascephcluster/v1alpha1"
 )
 
 // +genclient

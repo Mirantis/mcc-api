@@ -1,38 +1,42 @@
 package util
 
 import (
+	pkgapis "github.com/Mirantis/mcc-api/v2/pkg/apis"
+	clusterv1 "github.com/Mirantis/mcc-api/v2/pkg/apis/cluster/v1alpha1"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/kaas/v1alpha1"
+	"github.com/Mirantis/mcc-api/v2/pkg/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/serializer/json"
-
-	publicapi "github.com/Mirantis/mcc-api/pkg/apis/public"
-	clusterv1 "github.com/Mirantis/mcc-api/pkg/apis/public/cluster/v1alpha1"
-	"github.com/Mirantis/mcc-api/pkg/apis/public/kaas/v1alpha1"
-	"github.com/Mirantis/mcc-api/pkg/errors"
 )
 
-type ClusterSpecGetter interface {
-	GetClusterSpecMixin() *v1alpha1.ClusterSpecMixin
-	GetNewClusterStatus() runtime.Object
-}
-
-type ClusterStatusGetter interface {
-	GetClusterStatusMixin() *v1alpha1.ClusterStatusMixin
-}
-
+// +gocode:public-api=true
 type MachineSpecGetter interface {
 	GetMachineSpecMixin() *v1alpha1.MachineSpecMixin
 	GetNewMachineStatus() runtime.Object
 }
 
+// +gocode:public-api=true
 type MachineStatusGetter interface {
 	GetMachineStatusMixin() *v1alpha1.MachineStatusMixin
 }
 
+// +gocode:public-api=true
+type ClusterSpecGetter interface {
+	GetClusterSpecMixin() *v1alpha1.ClusterSpecMixin
+	GetNewClusterStatus() runtime.Object
+}
+
+// +gocode:public-api=true
+type ClusterStatusGetter interface {
+	GetClusterStatusMixin() *v1alpha1.ClusterStatusMixin
+}
+
+// +gocode:public-api=true
 func decodeExtension(ext *runtime.RawExtension) (runtime.Object, error) {
 	if ext.Object != nil {
 		return ext.Object, nil
 	}
-	s := json.NewSerializer(&json.SimpleMetaFactory{}, publicapi.Scheme, publicapi.Scheme, false)
+	s := json.NewSerializer(&json.SimpleMetaFactory{}, pkgapis.Scheme, pkgapis.Scheme, false)
 	obj, _, err := s.Decode(ext.Raw, nil, nil)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to parse RawExtension value")
@@ -43,8 +47,9 @@ func decodeExtension(ext *runtime.RawExtension) (runtime.Object, error) {
 	return obj, nil
 }
 
+// +gocode:public-api=true
 func setObjGVK(obj runtime.Object) error {
-	gvks, _, err := publicapi.Scheme.ObjectKinds(obj)
+	gvks, _, err := pkgapis.Scheme.ObjectKinds(obj)
 	if err != nil {
 		return errors.Wrapf(err, "failed to get GVK for object %v", obj)
 	}
@@ -55,6 +60,7 @@ func setObjGVK(obj runtime.Object) error {
 	return nil
 }
 
+// +gocode:public-api=true
 func GetClusterSpecObj(cluster *clusterv1.Cluster) (runtime.Object, error) {
 	if cluster.Spec.ProviderSpec.Value == nil {
 		return nil, errors.New("no providerSpec in Cluster object")
@@ -66,6 +72,7 @@ func GetClusterSpecObj(cluster *clusterv1.Cluster) (runtime.Object, error) {
 	return obj, nil
 }
 
+// +gocode:public-api=true
 func GetClusterSpec(cluster *clusterv1.Cluster) (*v1alpha1.ClusterSpecMixin, error) {
 	obj, err := GetClusterSpecObj(cluster)
 	if err != nil {
@@ -78,6 +85,7 @@ func GetClusterSpec(cluster *clusterv1.Cluster) (*v1alpha1.ClusterSpecMixin, err
 	return casted.GetClusterSpecMixin(), nil
 }
 
+// +gocode:public-api=true
 func GetClusterStatusObj(cluster *clusterv1.Cluster) (runtime.Object, error) {
 	var obj runtime.Object
 	if cluster.Status.ProviderStatus == nil {
@@ -110,6 +118,7 @@ func GetClusterStatusObj(cluster *clusterv1.Cluster) (runtime.Object, error) {
 	return obj, nil
 }
 
+// +gocode:public-api=true
 func GetClusterStatus(cluster *clusterv1.Cluster) (*v1alpha1.ClusterStatusMixin, error) {
 	obj, err := GetClusterStatusObj(cluster)
 	if err != nil {
@@ -122,6 +131,7 @@ func GetClusterStatus(cluster *clusterv1.Cluster) (*v1alpha1.ClusterStatusMixin,
 	return casted.GetClusterStatusMixin(), nil
 }
 
+// +gocode:public-api=true
 func DecodeMachineSpecObj(spec *clusterv1.MachineSpec) (runtime.Object, error) {
 	if spec.ProviderSpec.Value == nil {
 		return nil, errors.New("no providerSpec given")
@@ -133,10 +143,12 @@ func DecodeMachineSpecObj(spec *clusterv1.MachineSpec) (runtime.Object, error) {
 	return obj, nil
 }
 
+// +gocode:public-api=true
 func GetMachineSpecObj(machine *clusterv1.Machine) (runtime.Object, error) {
 	return DecodeMachineSpecObj(&machine.Spec)
 }
 
+// +gocode:public-api=true
 func DecodeMachineSpec(spec *clusterv1.MachineSpec) (*v1alpha1.MachineSpecMixin, error) {
 	obj, err := DecodeMachineSpecObj(spec)
 	if err != nil {
@@ -149,10 +161,12 @@ func DecodeMachineSpec(spec *clusterv1.MachineSpec) (*v1alpha1.MachineSpecMixin,
 	return casted.GetMachineSpecMixin(), nil
 }
 
+// +gocode:public-api=true
 func GetMachineSpec(machine *clusterv1.Machine) (*v1alpha1.MachineSpecMixin, error) {
 	return DecodeMachineSpec(&machine.Spec)
 }
 
+// +gocode:public-api=true
 func GetMachineStatusObj(machine *clusterv1.Machine) (runtime.Object, error) {
 	var obj runtime.Object
 	if machine.Status.ProviderStatus == nil {
@@ -185,6 +199,7 @@ func GetMachineStatusObj(machine *clusterv1.Machine) (runtime.Object, error) {
 	return obj, nil
 }
 
+// +gocode:public-api=true
 func GetMachineStatus(machine *clusterv1.Machine) (*v1alpha1.MachineStatusMixin, error) {
 	obj, err := GetMachineStatusObj(machine)
 	if err != nil {
@@ -197,6 +212,7 @@ func GetMachineStatus(machine *clusterv1.Machine) (*v1alpha1.MachineStatusMixin,
 	return casted.GetMachineStatusMixin(), nil
 }
 
+// +gocode:public-api=true
 func GetCurrentRelease(cluster *clusterv1.Cluster) (string, error) {
 	clusterStatus, err := GetClusterStatus(cluster)
 	if err != nil {

@@ -22,7 +22,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	miracephv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/common/miraceph/v1alpha1"
+	miracephv1alpha1 "github.com/Mirantis/mcc-api/v2/pkg/apis/common/miraceph/v1alpha1"
 	v1 "k8s.io/api/core/v1"
 )
 

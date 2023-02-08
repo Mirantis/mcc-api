@@ -20,7 +20,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	l2tmplTypes "github.com/Mirantis/mcc-api/pkg/apis/common/ipam/ipam/l2template/types"
+	l2tmplTypes "github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/ipam/l2template/types"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

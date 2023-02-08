@@ -6,21 +6,8 @@ import (
 	"strings"
 )
 
+// +gocode:public-api=true
 type IPList []uint32
-
-func NewIPList(ips []string) *IPList {
-	// rv := make(IPList, len(ips))
-	rv := IPList{}
-	for _, ip := range ips {
-		if tmp := net.ParseIP(ip); tmp != nil {
-			rv = append(rv, IPtoUint32(tmp))
-		}
-	}
-	rv.Sort()
-	return &rv
-}
-
-// ----------------------------------------------------------------------------
 
 // Sort --
 func (r IPList) Sort() {
@@ -52,7 +39,6 @@ func (r IPList) Index(targetIP uint32) int {
 	}
 	return -1
 }
-
 func (r IPList) Strings() []string {
 	rv := make([]string, len(r))
 	for i, ip := range r {
@@ -60,7 +46,19 @@ func (r IPList) Strings() []string {
 	}
 	return rv
 }
-
 func (r IPList) String() string {
 	return strings.Join(r.Strings(), ", ")
+}
+
+// +gocode:public-api=true
+func NewIPList(ips []string) *IPList {
+
+	rv := IPList{}
+	for _, ip := range ips {
+		if tmp := net.ParseIP(ip); tmp != nil {
+			rv = append(rv, IPtoUint32(tmp))
+		}
+	}
+	rv.Sort()
+	return &rv
 }

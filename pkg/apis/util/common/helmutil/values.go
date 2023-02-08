@@ -3,74 +3,20 @@ package helmutil
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
-
 	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/helm/pkg/chartutil"
+	"strings"
 )
 
+// +gocode:public-api=true
 type Values = chartutil.Values
-
-func ToValues(v interface{}) (Values, bool) {
-	switch c := v.(type) {
-	case Values:
-		return c, true
-	case map[string]interface{}:
-		return Values(c), true
-	default:
-		return nil, false
-	}
-}
-
-// DeepCopy based on k8s.io/apimachinery/pkg/runtime.DeepCopyJSON with added Values type handling
-func DeepCopy(x Values) Values {
-	return DeepCopyValue(x).(Values)
-}
-
-func DeepCopyValue(x interface{}) interface{} {
-	switch x := x.(type) {
-	case Values:
-		if x == nil {
-			// Typed nil - an interface{} that contains a type map[string]interface{} with a value of nil
-			return x
-		}
-		clone := make(Values, len(x))
-		for k, v := range x {
-			clone[k] = DeepCopyValue(v)
-		}
-		return clone
-	case map[string]interface{}:
-		if x == nil {
-			// Typed nil - an interface{} that contains a type map[string]interface{} with a value of nil
-			return x
-		}
-		clone := make(Values, len(x))
-		for k, v := range x {
-			clone[k] = DeepCopyValue(v)
-		}
-		return clone
-	case []interface{}:
-		if x == nil {
-			// Typed nil - an interface{} that contains a type []interface{} with a value of nil
-			return x
-		}
-		clone := make([]interface{}, len(x))
-		for i, v := range x {
-			clone[i] = DeepCopyValue(v)
-		}
-		return clone
-	case string, int64, bool, float64, nil, json.Number:
-		return x
-	default:
-		panic(fmt.Errorf("cannot deep copy %T", x))
-	}
-}
 
 //go:generate go run ../../vendor/k8s.io/code-generator/cmd/deepcopy-gen/main.go -O zz_generated.deepcopy -i ./... -h ../../hack/boilerplate.go.txt
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +k8s:deepcopy-gen=true
+// +gocode:public-api=true
 type Unstructured struct {
 	unstructured.Unstructured `json:",inline"`
 }
@@ -85,6 +31,65 @@ func (in *Unstructured) DeepCopy() *Unstructured {
 	return out
 }
 
+// +gocode:public-api=true
+func ToValues(v interface{}) (Values, bool) {
+	switch c := v.(type) {
+	case Values:
+		return c, true
+	case map[string]interface{}:
+		return Values(c), true
+	default:
+		return nil, false
+	}
+}
+
+// DeepCopy based on k8s.io/apimachinery/pkg/runtime.DeepCopyJSON with added Values type handling
+// +gocode:public-api=true
+func DeepCopy(x Values) Values {
+	return DeepCopyValue(x).(Values)
+}
+
+// +gocode:public-api=true
+func DeepCopyValue(x interface{}) interface{} {
+	switch x := x.(type) {
+	case Values:
+		if x == nil {
+
+			return x
+		}
+		clone := make(Values, len(x))
+		for k, v := range x {
+			clone[k] = DeepCopyValue(v)
+		}
+		return clone
+	case map[string]interface{}:
+		if x == nil {
+
+			return x
+		}
+		clone := make(Values, len(x))
+		for k, v := range x {
+			clone[k] = DeepCopyValue(v)
+		}
+		return clone
+	case []interface{}:
+		if x == nil {
+
+			return x
+		}
+		clone := make([]interface{}, len(x))
+		for i, v := range x {
+			clone[i] = DeepCopyValue(v)
+		}
+		return clone
+	case string, int64, bool, float64, nil, json.Number:
+		return x
+	default:
+		panic(fmt.Errorf("cannot deep copy %T", x))
+	}
+}
+
+// +gocode:public-api=true
 func REFromValues(v Values) runtime.RawExtension {
 	return runtime.RawExtension{
 		Object: &Unstructured{
@@ -95,6 +100,7 @@ func REFromValues(v Values) runtime.RawExtension {
 	}
 }
 
+// +gocode:public-api=true
 func ParseRE(re *runtime.RawExtension) (Values, error) {
 	if re.Raw != nil {
 		v, err := chartutil.ReadValues(re.Raw)
@@ -116,6 +122,7 @@ func ParseRE(re *runtime.RawExtension) (Values, error) {
 	return uns.Object, nil
 }
 
+// +gocode:public-api=true
 func MarshalRE(re *runtime.RawExtension) error {
 	if re.Raw != nil {
 		return nil
@@ -133,6 +140,7 @@ func MarshalRE(re *runtime.RawExtension) error {
 	return nil
 }
 
+// +gocode:public-api=true
 func OverrideValuesWithValues(dst Values, src Values) {
 	for k, sv := range src {
 		dv, ok := dst[k]
@@ -148,6 +156,7 @@ func OverrideValuesWithValues(dst Values, src Values) {
 	}
 }
 
+// +gocode:public-api=true
 func OverrideREWithValues(dst *runtime.RawExtension, src Values) error {
 	dstv, err := ParseRE(dst)
 	if err != nil {
@@ -157,6 +166,7 @@ func OverrideREWithValues(dst *runtime.RawExtension, src Values) error {
 	return nil
 }
 
+// +gocode:public-api=true
 func OverrideREWithRE(dst, src *runtime.RawExtension) error {
 	srcv, err := ParseRE(src)
 	if err != nil {
@@ -165,10 +175,12 @@ func OverrideREWithRE(dst, src *runtime.RawExtension) error {
 	return OverrideREWithValues(dst, srcv)
 }
 
+// +gocode:public-api=true
 func jsonPath(fields []string) string {
 	return "." + strings.Join(fields, ".")
 }
 
+// +gocode:public-api=true
 func NestedObject(v Values, fields ...string) (interface{}, bool, error) {
 	var val interface{} = v
 
@@ -187,6 +199,7 @@ func NestedObject(v Values, fields ...string) (interface{}, bool, error) {
 	return val, true, nil
 }
 
+// +gocode:public-api=true
 func NestedString(v Values, fields ...string) (string, bool, error) {
 	val, exists, err := NestedObject(v, fields...)
 	if !exists {
@@ -199,6 +212,7 @@ func NestedString(v Values, fields ...string) (string, bool, error) {
 	return res, true, nil
 }
 
+// +gocode:public-api=true
 func NestedBool(v Values, fields ...string) (res bool, exists bool, err error) {
 	var (
 		val interface{}
@@ -215,6 +229,7 @@ func NestedBool(v Values, fields ...string) (res bool, exists bool, err error) {
 	return res, true, nil
 }
 
+// +gocode:public-api=true
 func IsNestedBoolValueSet(v Values, key string) bool {
 	val, ok, err := NestedBool(v, key)
 	if !ok || err != nil {
@@ -224,6 +239,7 @@ func IsNestedBoolValueSet(v Values, key string) bool {
 	return val
 }
 
+// +gocode:public-api=true
 func NestedSlice(v Values, fields ...string) ([]interface{}, bool, error) {
 	val, exists, err := NestedObject(v, fields...)
 	if !exists {
@@ -236,6 +252,7 @@ func NestedSlice(v Values, fields ...string) ([]interface{}, bool, error) {
 	return res, true, nil
 }
 
+// +gocode:public-api=true
 func NestedValues(v Values, fields ...string) (Values, bool, error) {
 	val, exists, err := NestedObject(v, fields...)
 	if !exists {
@@ -248,6 +265,7 @@ func NestedValues(v Values, fields ...string) (Values, bool, error) {
 	return res, true, nil
 }
 
+// +gocode:public-api=true
 func StringsToInterfaces(list []string) []interface{} {
 	res := make([]interface{}, len(list))
 	for i, v := range list {

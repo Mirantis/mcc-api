@@ -1,48 +1,34 @@
-/*
-Copyright 2017 The Kubernetes Authors.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package util
 
 import (
 	"crypto/rand"
-	"time"
-
+	clusterv1 "github.com/Mirantis/mcc-api/v2/pkg/apis/cluster/v1alpha1"
 	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/util/wait"
-
-	clusterv1 "github.com/Mirantis/mcc-api/pkg/apis/public/cluster/v1alpha1"
+	"time"
 )
 
 const (
 	// MachineListFormatDeprecationMessage notifies the user that the old
 	// MachineList format is no longer supported
+	// +gocode:public-api=true
 	MachineListFormatDeprecationMessage = "Your MachineList items must include Kind and APIVersion"
 )
 
 // IsControlPlaneMachine checks machine is a control plane node.
+// +gocode:public-api=true
 func IsControlPlaneMachine(machine *clusterv1.Machine) bool {
 	return machine.ObjectMeta.Labels[clusterv1.MachineControlPlaneLabelName] != ""
 }
 
 // IsBastionMachine checks is a bastion
+// +gocode:public-api=true
 func IsBastionMachine(machine *clusterv1.Machine) bool {
 	return machine.ObjectMeta.Labels[clusterv1.MachineBastionLabelName] != ""
 }
 
 // Filter filters a list for a string.
+// +gocode:public-api=true
 func Filter(list []string, strToFilter string) []string {
 	var newList []string
 
@@ -56,6 +42,7 @@ func Filter(list []string, strToFilter string) []string {
 }
 
 // Contains returns true if a list contains a string.
+// +gocode:public-api=true
 func Contains(list []string, strToSearch string) bool {
 	for _, item := range list {
 		if item == strToSearch {
@@ -65,6 +52,7 @@ func Contains(list []string, strToSearch string) bool {
 	return false
 }
 
+// +gocode:public-api=true
 func GenerateRandomBytes(length int) (data []byte, err error) {
 	data = make([]byte, length)
 	var n int
@@ -78,6 +66,7 @@ func GenerateRandomBytes(length int) (data []byte, err error) {
 	return data, nil
 }
 
+// +gocode:public-api=true
 func GenerateRandomString(length int) (string, error) {
 	keyBytes, err := GenerateRandomBytes(length)
 	if err != nil {
@@ -93,6 +82,7 @@ func GenerateRandomString(length int) (string, error) {
 
 // Diff compares two lists and returns unique items from the source list
 // which are not contained in the target list.
+// +gocode:public-api=true
 func Diff(target, source []string) []string {
 	diff := make([]string, 0, len(source))
 	for _, v := range source {
@@ -105,6 +95,7 @@ func Diff(target, source []string) []string {
 }
 
 // PollImmediate is warpper to call wait.PollImmediate or PollImmediateInfinite functions
+// +gocode:public-api=true
 func PollImmediate(isInfinite bool, interval, timeout time.Duration, condition wait.ConditionFunc) error {
 	if isInfinite {
 		return wait.PollImmediateInfinite(interval, condition)

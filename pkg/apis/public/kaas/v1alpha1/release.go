@@ -5,8 +5,8 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	lcm "github.com/Mirantis/mcc-api/pkg/apis/common/lcm/v1alpha1"
-	"github.com/Mirantis/mcc-api/pkg/errors"
+	lcm "github.com/Mirantis/mcc-api/v2/pkg/apis/common/lcm/v1alpha1"
+	"github.com/Mirantis/mcc-api/v2/pkg/errors"
 )
 
 // +genclient

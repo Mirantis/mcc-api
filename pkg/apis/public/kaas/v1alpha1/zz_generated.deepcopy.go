@@ -22,8 +22,8 @@ limitations under the License.
 package v1alpha1
 
 import (
-	kaascephclusterv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/common/kaascephcluster/v1alpha1"
-	lcmv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/common/lcm/v1alpha1"
+	kaascephclusterv1alpha1 "github.com/Mirantis/mcc-api/v2/pkg/apis/common/kaascephcluster/v1alpha1"
+	lcmv1alpha1 "github.com/Mirantis/mcc-api/v2/pkg/apis/common/lcm/v1alpha1"
 	packngo "github.com/packethost/packngo"
 	v1 "k8s.io/api/core/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"

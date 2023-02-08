@@ -26,7 +26,7 @@ import (
 
 	"sigs.k8s.io/yaml"
 
-	"github.com/Mirantis/mcc-api/pkg/apis/common/ipam/config"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/config"
 )
 
 var subnetStateRE = regexp.MustCompile(`^([[:upper:]]+)`)

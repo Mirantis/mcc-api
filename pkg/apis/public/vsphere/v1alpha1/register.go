@@ -17,7 +17,7 @@ limitations under the License.
 // Package v1alpha1 contains API Schema definitions for the vsphere v1alpha1 API group
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen=package,register
-// +k8s:conversion-gen=github.com/Mirantis/mcc-api/pkg/apis/public/vsphere
+// +k8s:conversion-gen=github.com/Mirantis/mcc-api/v2/pkg/apis/public/vsphere
 // +k8s:defaulter-gen=TypeMeta
 // +groupName=vsphere.cluster.sigs.k8s.io
 package v1alpha1
@@ -30,9 +30,9 @@ import (
 	crclient "sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/scheme"
 
-	clusterv1 "github.com/Mirantis/mcc-api/pkg/apis/public/cluster/v1alpha1"
-	"github.com/Mirantis/mcc-api/pkg/apis/public/vsphere"
-	"github.com/Mirantis/mcc-api/pkg/errors"
+	clusterv1 "github.com/Mirantis/mcc-api/v2/pkg/apis/public/cluster/v1alpha1"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/public/vsphere"
+	"github.com/Mirantis/mcc-api/v2/pkg/errors"
 )
 
 var (

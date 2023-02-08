@@ -11,9 +11,9 @@ import (
 	deploymentutil "k8s.io/kubectl/pkg/util/deployment"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	lcmv1alpha1 "github.com/Mirantis/mcc-api/pkg/apis/common/lcm/v1alpha1"
-	clusterv1 "github.com/Mirantis/mcc-api/pkg/apis/public/cluster/v1alpha1"
-	"github.com/Mirantis/mcc-api/pkg/errors"
+	lcmv1alpha1 "github.com/Mirantis/mcc-api/v2/pkg/apis/common/lcm/v1alpha1"
+	clusterv1 "github.com/Mirantis/mcc-api/v2/pkg/apis/public/cluster/v1alpha1"
+	"github.com/Mirantis/mcc-api/v2/pkg/errors"
 )
 
 // mandatoryReadinessCheckNamespaces list of namespaces resources to check for notReadyKaasObjects

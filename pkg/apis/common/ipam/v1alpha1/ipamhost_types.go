@@ -20,11 +20,11 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	kaasIpam "github.com/Mirantis/mcc-api/pkg/apis/common/ipam/ipam"
-	"github.com/Mirantis/mcc-api/pkg/apis/common/ipam/ipam/cloudinit"
-	l2tmplTypes "github.com/Mirantis/mcc-api/pkg/apis/common/ipam/ipam/l2template/types"
-	kiTypes "github.com/Mirantis/mcc-api/pkg/apis/common/ipam/ipam/types"
-	k8sutilTypes "github.com/Mirantis/mcc-api/pkg/apis/util/ipam/k8sutil/types"
+	kaasIpam "github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/ipam"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/ipam/cloudinit"
+	l2tmplTypes "github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/ipam/l2template/types"
+	kiTypes "github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/ipam/types"
+	k8sutilTypes "github.com/Mirantis/mcc-api/v2/pkg/apis/util/ipam/k8sutil/types"
 )
 
 // IpamHostSpec defines the desired state of IpamHost

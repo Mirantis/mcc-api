@@ -7,7 +7,7 @@ import (
 
 	"sigs.k8s.io/yaml"
 
-	kaasIpam "github.com/Mirantis/mcc-api/pkg/apis/common/ipam/ipam"
+	kaasIpam "github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/ipam"
 )
 
 // -----------------------------------------------------------------------------

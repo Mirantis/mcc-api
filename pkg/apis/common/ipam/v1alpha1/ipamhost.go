@@ -23,8 +23,8 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/yaml"
 
-	"github.com/Mirantis/mcc-api/pkg/apis/common/ipam/config"
-	k8types "github.com/Mirantis/mcc-api/pkg/apis/util/ipam/k8sutil/types"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/common/ipam/config"
+	k8types "github.com/Mirantis/mcc-api/v2/pkg/apis/util/ipam/k8sutil/types"
 )
 
 //-----------------------------------------------------------------------------

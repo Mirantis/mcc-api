@@ -8,13 +8,14 @@ import (
 	"unsafe"
 )
 
+// CidrMaskExists is CIDR mask checker
+// +gocode:public-api=true
 var CidrMaskExists = regexp.MustCompile(`/\d{1,2}$`)
-
-// ----------------------------------------------------------------------------
 
 // CompareIP -- positive result if address `b` more address `a`
 // or ngative if less
 // returns 0 if the both addresses are equal
+// +gocode:public-api=true
 func CompareIP(a, b net.IP) int {
 	return Compare32(IPtoUint32(a), IPtoUint32(b))
 }
@@ -22,13 +23,13 @@ func CompareIP(a, b net.IP) int {
 // Compare32 -- positive result if address `b` more address `a`
 // or ngative if less
 // returns 0 if the both addresses are equal
+// +gocode:public-api=true
 func Compare32(a, b uint32) int {
 	return int(b) - int(a)
 }
 
-// ----------------------------------------------------------------------------
-
 // IPtoUint32 -- convert net.IP to Uint32
+// +gocode:public-api=true
 func IPtoUint32(ip net.IP) (rv uint32) {
 	addr := ip.To4()
 	for i, k := 0, 24; i < 4; i, k = i+1, k-8 {
@@ -38,6 +39,7 @@ func IPtoUint32(ip net.IP) (rv uint32) {
 }
 
 // CidrToUint32 -- convert string IP to Uint32
+// +gocode:public-api=true
 func CidrToUint32(s string) uint32 {
 	if !CidrMaskExists.MatchString(s) {
 		s += "/32"
@@ -50,6 +52,7 @@ func CidrToUint32(s string) uint32 {
 }
 
 // Uint32toIP -- convert Uint32 to net.IP
+// +gocode:public-api=true
 func Uint32toIP(ip uint32) (rv net.IP) {
 	tmp := make([]byte, 4)
 	copy(tmp, (*[4]byte)(unsafe.Pointer(&ip))[:])
@@ -61,6 +64,7 @@ func Uint32toIP(ip uint32) (rv net.IP) {
 }
 
 // Uint32toString -- convert Uint32 to string IP representation
+// +gocode:public-api=true
 func Uint32toString(ip uint32) (rv string) {
 	bs := make([]byte, 4)
 	binary.BigEndian.PutUint32(bs, ip)
@@ -68,11 +72,13 @@ func Uint32toString(ip uint32) (rv string) {
 }
 
 // NextIP -- returns next IP address
+// +gocode:public-api=true
 func NextIP(ip net.IP) net.IP {
 	return Uint32toIP(IPtoUint32(ip) + 1)
 }
 
 // PrevIP -- returns next IP address
+// +gocode:public-api=true
 func PrevIP(ip net.IP) net.IP {
 	return Uint32toIP(IPtoUint32(ip) - 1)
 }

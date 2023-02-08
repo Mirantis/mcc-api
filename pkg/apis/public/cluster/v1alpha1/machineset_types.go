@@ -24,7 +24,7 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 
-	"github.com/Mirantis/mcc-api/pkg/apis/public/cluster/common"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/public/cluster/common"
 )
 
 // +genclient

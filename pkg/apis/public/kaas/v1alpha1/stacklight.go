@@ -5,7 +5,7 @@ import (
 
 	crclient "sigs.k8s.io/controller-runtime/pkg/client"
 
-	perrors "github.com/Mirantis/mcc-api/pkg/errors"
+	perrors "github.com/Mirantis/mcc-api/v2/pkg/errors"
 )
 
 type StackLightStatus struct {

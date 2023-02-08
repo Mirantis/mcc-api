@@ -22,7 +22,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	tags "github.com/Mirantis/mcc-api/pkg/apis/public/aws/tags"
+	tags "github.com/Mirantis/mcc-api/v2/pkg/apis/public/aws/tags"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 

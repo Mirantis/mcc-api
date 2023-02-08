@@ -1,7 +1,7 @@
 package v1alpha1
 
 import (
-	"github.com/Mirantis/mcc-api/pkg/apis/common/lcm/v1alpha1"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/common/lcm/v1alpha1"
 )
 
 const (

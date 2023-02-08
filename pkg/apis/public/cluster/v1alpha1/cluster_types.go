@@ -21,7 +21,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 
-	"github.com/Mirantis/mcc-api/pkg/apis/public/cluster/common"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/public/cluster/common"
 )
 
 const ClusterFinalizer = "cluster.cluster.k8s.io"

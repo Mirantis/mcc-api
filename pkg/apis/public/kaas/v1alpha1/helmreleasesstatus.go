@@ -11,7 +11,7 @@ import (
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	crclient "sigs.k8s.io/controller-runtime/pkg/client"
 
-	"github.com/Mirantis/mcc-api/pkg/util/k8s"
+	"github.com/Mirantis/mcc-api/v2/pkg/util/k8s"
 )
 
 type HelmReleasesStatus struct {

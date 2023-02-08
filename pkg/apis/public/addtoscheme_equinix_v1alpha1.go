@@ -17,8 +17,8 @@ limitations under the License.
 package public
 
 import (
-	"github.com/Mirantis/mcc-api/pkg/apis/public/equinix/v1alpha1"
-	"github.com/Mirantis/mcc-api/pkg/apis/public/equinix/v1alpha2"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/public/equinix/v1alpha1"
+	"github.com/Mirantis/mcc-api/v2/pkg/apis/public/equinix/v1alpha2"
 )
 
 func init() {

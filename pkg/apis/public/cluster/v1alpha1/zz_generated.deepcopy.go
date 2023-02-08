@@ -22,7 +22,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	common "github.com/Mirantis/mcc-api/pkg/apis/public/cluster/common"
+	common "github.com/Mirantis/mcc-api/v2/pkg/apis/public/cluster/common"
 	v1 "k8s.io/api/core/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	intstr "k8s.io/apimachinery/pkg/util/intstr"

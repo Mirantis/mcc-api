@@ -1,21 +1,3 @@
-/*
-Copyright © 2020 Mirantis
-
-Inspired by https://github.com/inwinstack/ipam/, https://github.com/inwinstack/blended/
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package k8sutil
 
 import (
@@ -23,24 +5,23 @@ import (
 	"context"
 	"encoding/gob"
 	"fmt"
-	"reflect"
-	"regexp"
-	"strings"
-	"time"
-
+	k8types "github.com/Mirantis/mcc-api/v2/pkg/apis/util/ipam/k8sutil/types"
 	"github.com/google/uuid"
-	"github.com/thoas/go-funk"
+	funk "github.com/thoas/go-funk"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/cache"
-
-	"github.com/Mirantis/mcc-api/pkg/apis/common/ipam/config"
-	k8types "github.com/Mirantis/mcc-api/pkg/apis/util/ipam/k8sutil/types"
+	"regexp"
+	"strings"
+	"time"
 )
 
+// IsMACaddr is MAC address checker
+// +gocode:public-api=true
 var IsMACaddr = regexp.MustCompile(`[0-9a-fA-F]{1,2}:[0-9a-fA-F]{1,2}:[0-9a-fA-F]{1,2}:[0-9a-fA-F]{1,2}:[0-9a-fA-F]{1,2}:[0-9a-fA-F]{1,2}`)
 
 //-----------------------------------------------------------------------------
+// +gocode:public-api=true
 func setSomething(m map[string]string, k, v string, shouldBeChanged []bool) (map[string]string, bool) {
 	var changed bool
 	if m == nil {
@@ -50,13 +31,14 @@ func setSomething(m map[string]string, k, v string, shouldBeChanged []bool) (map
 		changed = shouldBeChanged[0]
 	}
 	if tmp, ok := m[k]; ok && tmp == v {
-		// present, equal
+
 		return m, changed
 	}
 	m[k] = v
 	return m, true
 }
 
+// +gocode:public-api=true
 func clearSomething(m map[string]string, k string, shouldBeChanged []bool) (map[string]string, bool) {
 	var changed bool
 	if len(shouldBeChanged) > 0 {
@@ -72,10 +54,9 @@ func clearSomething(m map[string]string, k string, shouldBeChanged []bool) (map[
 	return m, changed
 }
 
-//-----------------------------------------------------------------------------
-
 // SetLabel returns `true` if value really was changed,
 // or `true` if optional parameter shouldBeChanged == true
+// +gocode:public-api=true
 func SetLabel(o k8types.K8sObject, label, value string, shouldBeChanged ...bool) bool {
 	tmp, changed := setSomething(o.GetLabels(), label, value, shouldBeChanged)
 	if changed {
@@ -86,6 +67,7 @@ func SetLabel(o k8types.K8sObject, label, value string, shouldBeChanged ...bool)
 
 // RemoveLabel returns `true` if value really was changed
 // or `true` if optional parameter shouldBeChanged == true
+// +gocode:public-api=true
 func RemoveLabel(o k8types.K8sObject, label string, shouldBeChanged ...bool) bool {
 	tmp, changed := clearSomething(o.GetLabels(), label, shouldBeChanged)
 	if changed {
@@ -94,10 +76,9 @@ func RemoveLabel(o k8types.K8sObject, label string, shouldBeChanged ...bool) boo
 	return changed
 }
 
-//-----------------------------------------------------------------------------
-
 // SetAnnotation returns `true` if value really was changed,
 // or `true` if optional parameter shouldBeChanged == true
+// +gocode:public-api=true
 func SetAnnotation(o k8types.K8sObject, annotation, value string, shouldBeChanged ...bool) bool {
 	tmp, changed := setSomething(o.GetAnnotations(), annotation, value, shouldBeChanged)
 	if changed {
@@ -108,6 +89,7 @@ func SetAnnotation(o k8types.K8sObject, annotation, value string, shouldBeChange
 
 // RemoveAnnotation returns `true` if value really was changed
 // or `true` if optional parameter shouldBeChanged == true
+// +gocode:public-api=true
 func RemoveAnnotation(o k8types.K8sObject, annotation string, shouldBeChanged ...bool) bool {
 	tmp, changed := clearSomething(o.GetAnnotations(), annotation, shouldBeChanged)
 	if changed {
@@ -116,51 +98,8 @@ func RemoveAnnotation(o k8types.K8sObject, annotation string, shouldBeChanged ..
 	return changed
 }
 
-//-----------------------------------------------------------------------------
-
-func MakeNeedToUpdate(o k8types.K8sObject, oldVal, newVal interface{}) {
-	if !reflect.DeepEqual(oldVal, newVal) {
-		SetNeedToUpdate(o)
-	}
-}
-
-// SetNeedToUpdate returns `true` if value really was changed,
-// or `true` if optional parameter shouldBeChanged == true
-func SetNeedToUpdate(o k8types.K8sObject, shouldBeChanged ...bool) (changed bool) {
-	tmp := o.GetAnnotations()
-	if tmp == nil {
-		tmp = map[string]string{}
-	}
-	if _, ok := tmp[config.ReqToReconcileAnnotation]; !ok {
-		tmp[config.ReqToReconcileAnnotation] = time.Now().UTC().Format(config.TimeOutputFormatRFC3339)
-		o.SetAnnotations(tmp)
-		changed = true
-	}
-	return changed
-}
-
-// ClearNeedToUpdate returns `true` if value really was changed
-// or `true` if optional parameter shouldBeChanged == true
-func ClearNeedToUpdate(o k8types.K8sObject, shouldBeChanged ...bool) bool {
-	tmp, changed := clearSomething(o.GetAnnotations(), config.ReqToReconcileAnnotation, shouldBeChanged)
-	if changed {
-		o.SetAnnotations(tmp)
-	}
-	return changed
-}
-
-// IsNeedToUpdate returns `true` if "NeedToUpdate" flag is set
-func IsNeedToUpdate(o k8types.K8sObject) bool {
-	tmp := o.GetAnnotations()
-	if tmp == nil {
-		return false
-	}
-	return tmp[config.ReqToReconcileAnnotation] != ""
-}
-
-//-----------------------------------------------------------------------------
-
 // CheckFinalizer returns `true` if provided finalizer is set
+// +gocode:public-api=true
 func CheckFinalizer(o k8types.K8sObject, finalizer string) bool {
 	return funk.ContainsString(o.GetFinalizers(), finalizer)
 }
@@ -168,6 +107,7 @@ func CheckFinalizer(o k8types.K8sObject, finalizer string) bool {
 // AddFinalizer add provided finalizer to resource.
 // returns `true` if finalizer was really set
 // or `true` if optional parameter shouldBeChanged == true
+// +gocode:public-api=true
 func AddFinalizer(o k8types.K8sObject, finalizer string, shouldBeChanged ...bool) (rv bool) {
 	if len(shouldBeChanged) > 0 {
 		rv = shouldBeChanged[0]
@@ -182,6 +122,7 @@ func AddFinalizer(o k8types.K8sObject, finalizer string, shouldBeChanged ...bool
 // RemoveFinalizer remove provided finalizer from resource
 // returns `true` if finalizer was really removed
 // or `true` if optional parameter shouldBeChanged == true
+// +gocode:public-api=true
 func RemoveFinalizer(o k8types.K8sObject, finalizer string, shouldBeChanged ...bool) (rv bool) {
 	if len(shouldBeChanged) > 0 {
 		rv = shouldBeChanged[0]
@@ -195,9 +136,8 @@ func RemoveFinalizer(o k8types.K8sObject, finalizer string, shouldBeChanged ...b
 	return rv
 }
 
-//-----------------------------------------------------------------------------
-
 // KeyToNamespacedName convert key (namespace/name) to types.NamespacedName
+// +gocode:public-api=true
 func KeyToNamespacedName(ref string) (rv types.NamespacedName) {
 	namespace, name, err := cache.SplitMetaNamespaceKey(ref)
 	if err != nil {
@@ -209,6 +149,7 @@ func KeyToNamespacedName(ref string) (rv types.NamespacedName) {
 	}
 }
 
+// +gocode:public-api=true
 func GetRuntimeObjectNamespacedName(rtobj runtime.Object) (types.NamespacedName, error) {
 	obj, ok := rtobj.(k8types.K8sObject)
 	if !ok {
@@ -220,6 +161,7 @@ func GetRuntimeObjectNamespacedName(rtobj runtime.Object) (types.NamespacedName,
 	}, nil
 }
 
+// +gocode:public-api=true
 func GetRuntimeObjectKey(rtobj runtime.Object) (rv string, err error) {
 	nn, err := GetRuntimeObjectNamespacedName(rtobj)
 	if err != nil {
@@ -233,17 +175,19 @@ func GetRuntimeObjectKey(rtobj runtime.Object) (rv string, err error) {
 	return rv, err
 }
 
+// +gocode:public-api=true
 func Clone(in, out interface{}) (err error) {
 	buff := new(bytes.Buffer)
 	enc := gob.NewEncoder(buff)
 	dec := gob.NewDecoder(buff)
-	if err := enc.Encode(in); err != nil {
-		return err
+	if encErr := enc.Encode(in); encErr != nil {
+		return encErr
 	}
 	err = dec.Decode(out)
 	return err
 }
 
+// +gocode:public-api=true
 func GetLogKeyFromContext(ctx context.Context) (string, error) {
 	ctxValue := ctx.Value("LogKey")
 	clusterName, ok := ctxValue.(string)
@@ -253,39 +197,21 @@ func GetLogKeyFromContext(ctx context.Context) (string, error) {
 	return clusterName, nil
 }
 
-func GetNamespaceFromContext(ctx context.Context) (string, error) {
-	ctxValue := ctx.Value(config.NamespaceLabel)
-	clusterName, ok := ctxValue.(string)
-	if !ok {
-		return "", fmt.Errorf("%w of Namespace in the context, should be string, given: %T", k8types.ErrorWrongFormat, ctxValue)
-	}
-	return clusterName, nil
-}
-
+// +gocode:public-api=true
 func IsValidUUID(u string) bool {
 	_, err := uuid.Parse(u)
 	return err == nil
 }
 
-func GetServiceLabels(obj k8types.K8sObject) map[string]string {
-	rv := map[string]string{}
-	labels := obj.GetLabels()
-	for k := range labels {
-		if strings.HasPrefix(k, config.PerServiceLabelPrefix) {
-			rv[k] = labels[k]
-		}
-	}
-	return rv
-}
-
 // ContextWithReducedDeadline -- returns new ctx/cancel pair with reduced remaining time (by divider) of given context
 // if given context does not contains deadline fallbackDeadline will be used if not zero
+// +gocode:public-api=true
 func ContextWithReducedDeadline(ctx context.Context, divider uint, fallbackDeadline time.Duration) (newCtx context.Context, cancel context.CancelFunc) {
 	if deadline, ok := ctx.Deadline(); ok {
 		duration := time.Duration(time.Until(deadline).Nanoseconds() / int64(divider))
 		newCtx, cancel = context.WithTimeout(ctx, duration)
 	} else {
-		// context has no deadline
+
 		if fallbackDeadline != 0 {
 			newCtx, cancel = context.WithTimeout(ctx, fallbackDeadline)
 		} else {
@@ -295,6 +221,7 @@ func ContextWithReducedDeadline(ctx context.Context, divider uint, fallbackDeadl
 	return newCtx, cancel
 }
 
+// +gocode:public-api=true
 func EnsureContextDeadline(ctx context.Context, fallbackTimeout time.Duration) (newCtx context.Context, cancel context.CancelFunc, isFallback bool) {
 	var (
 		deadline time.Time
@@ -309,6 +236,7 @@ func EnsureContextDeadline(ctx context.Context, fallbackTimeout time.Duration) (
 	return newCtx, cancel, isFallback
 }
 
+// +gocode:public-api=true
 func EnsureNamespaceInRef(ref, fallbackNamespace string) (rv string, fallback bool) {
 	if fallbackNamespace == "" {
 		return ref, false

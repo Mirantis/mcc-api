@@ -17,7 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"github.com/Mirantis/mcc-api/pkg/errors"
+	"github.com/Mirantis/mcc-api/v2/pkg/errors"
 )
 
 // NetworkSpec specifies what the Azure networking resources should look like.
